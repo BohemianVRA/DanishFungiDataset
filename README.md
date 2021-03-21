@@ -1,7 +1,5 @@
 # Danish Fungi 2020 - Not Just Another Image Recognition Dataset
 
-By [Ji](mailto:guojia@gmail.com?subject=[GitHub]%20InsightFace%20Project) and [Jiankang Deng](https://jiankangdeng.github.io/)
-
 By [Lukas Picek](https://sites.google.com/view/picekl) et al. 
 [MAIL](mailto:lukaspicek@gmail.com?subject=[GitHub]%20DanishFungi2020%20Project)
 
