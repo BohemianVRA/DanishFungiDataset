@@ -111,7 +111,7 @@ If you use *Danish Fungi* for your research or aplication, please consider citat
 
 ```
 @article{picek2021danish,
-title={Danish Fungi 2020 -- Not Just Another Image Recognition Dataset},
+title={Danish Fungi 2020 - Not Just Another Image Recognition Dataset},
 author={Lukáš Picek and Milan Šulc and Jiří Matas and Jacob Heilmann-Clausen and Thomas S. Jeppesen and Thomas Læssøe and Tobias Frøslev},
 year={2021},
 eprint={2103.10107},
@@ -123,5 +123,5 @@ primaryClass={cs.CV}
 ## Contact
 
 ```
-[Lukas Picek](lukaspicek[at]gmail.com, picekl@ntis.zcu.cz)
+[Lukas Picek](lukaspicek@gmail.com, picekl@ntis.zcu.cz)
 ```
