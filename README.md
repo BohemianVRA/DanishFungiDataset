@@ -5,6 +5,12 @@ By [Lukas Picek](https://sites.google.com/view/picekl) et al.
 
 ## Introduction
 
+Supplementary material to:
+Danish Fungi 2020 - Not Just Another Image Recognition Dataset 
+
+In order to support research in fine-grained plant classification and to allow full reproducibility of our results, we share the Training Logs and Trained scripts.
+- The Images, Checkpoints and Metadata are not included based on size constrains and will be published after the review.
+
 ## Training Data
 
 ## Training
