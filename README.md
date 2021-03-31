@@ -22,7 +22,7 @@ docker pull nvcr.io/nvidia/pytorch:21.02-py3
 docker run --gpus all -it --rm -v local_dir:container_dir nvcr.io/nvidia/pytorch:21.02-py3
 ```
 
-2. Instal dependencis inside docker container
+2. Install dependencies inside docker container
 
 ```
 pip install pandas seaborn timm albumentation tqdm efficientnet_pytorch pretrainedmodels
