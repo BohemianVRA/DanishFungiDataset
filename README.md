@@ -13,6 +13,8 @@ In order to support research in fine-grained plant classification and to allow f
 
 ## Training Data
 
+Available at -> https://sites.google.com/view/danish-fungi-dataset
+
 ## Training
 
 1. Download PyTorch NGC Docker Image and RUN docker container
