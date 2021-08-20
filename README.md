@@ -1,3 +1,7 @@
+# News
+- Metrics slightly updated! Retrained with PyTorch NGC Docker Container 20.07 and on Ampere GPUs only (3080 / 3090)
+- EXIF metadata available! You can read it dirrectly from the images.
+
 # Danish Fungi 2020 - Not Just Another Image Recognition Dataset
 
 By [Lukas Picek](https://sites.google.com/view/picekl) et al. 
@@ -13,13 +17,15 @@ In order to support research in fine-grained plant classification and to allow f
 
 ## Training Data
 
+Available at -> https://sites.google.com/view/danish-fungi-dataset
+
 ## Training
 
 1. Download PyTorch NGC Docker Image and RUN docker container
 
 ```
-docker pull nvcr.io/nvidia/pytorch:21.02-py3
-docker run --gpus all -it --rm -v local_dir:container_dir nvcr.io/nvidia/pytorch:21.02-py3
+docker pull nvcr.io/nvidia/pytorch:21.07-py3
+docker run --gpus all -it --rm -v local_dir:container_dir nvcr.io/nvidia/pytorch:21.07-py3
 ```
 
 2. Install dependencies inside docker container
@@ -40,76 +46,76 @@ Classification performance of selected CNN architectures on DF20 and DF20 - Mini
 
 |  | Top1 [%] | Top3 [%] | F1 | Top1 [%] | Top3 [%] | F1 |
 | ---------------- | ---- | ---- | ---- | ---- | ---- | ---- |
-| MobileNet-V2         | 65.74 | 83.65 | 0.546 | 69.51 | 84.55 | 0.602 
-| ResNet-18            | 63.24 | 82.23 | 0.526 | 67.21 | 82.71 | 0.580
-| ResNet-34            | 63.60 | 81.68 | 0.522 | 69.92 | 84.72 | 0.605
-| ResNet-50            | 69.26 | 85.03 | 0.590 | 73.15 | 87.03 | 0.643
-| EfficientNet-B0      | 69.12 | 85.66 | 0.579 | 73.63 | 87.51 | 0.652
-| EfficientNet-B1      | 69.23 | 85.38 | 0.592 | 74.11 | 87.62 | 0.658
-| EfficientNet-B3      | 70.05 | 85.27 | 0.595 | 74.73 | 88.01 | 0.662
-| EfficientNet-B5      | 66.87 | 84.04 | 0.560 | 73.07 | 86.91 | 0.636
-| Inception-V3         | 65.30 | 82.83 | 0.530 | 71.45 | 85.64 | 0.622
-| InceptionResnet-V2   | 67.42 | 83.60 | 0.559 | 72.68 | 86.37 | 0.629
-| Inception-V4         | 67.50 | 83.63 | 0.572 | 74.19 | 87.63 | 0.655
-| SE-ResNeXt-101-32x4d | 72.39 | 86.57 | 0.635 | 76.73 | 89.09 | 0.691 
+| MobileNet-V2         | 65.58 | 83.65 | 0.559 | 69.77 | 85.01 | 0.606 
+| ResNet-18            | 62.91 | 81.65 | 0.514 | 67.13 | 82.65 | 0.580
+| ResNet-34            | 65.63 | 83.52 | 0.559 | 69.81 | 84.76 | 0.600
+| ResNet-50            | 68.39 | 85.22 | 0.587 | 73.49 | 87.13 | 0.649
+| EfficientNet-B0      | 67.94 | 85.71 | 0.567 | 73.65 | 87.55 | 0.653
+| EfficientNet-B1      | 68.35 | 84.67 | 0.572 | 74.08 | 87.68 | 0.654
+| EfficientNet-B3      | 69.59 | 85.55 | 0.590 | 75.69 | 88.72 | 0.673
+| EfficientNet-B5      | 68.76 | 85.00 | 0.579 | 76.10 | 88.85 | 0.678
+| Inception-V3         | 65.91 | 82.97 | 0.535 | 72.10 | 86.58 | 0.630
+| InceptionResnet-V2   | 64.67 | 81.42 | 0.542 | 74.01 | 87.49 | 0.651
+| Inception-V4         | 67.45 | 82.78 | 0.560 | 73.00 | 86.87 | 0.637
+| SE-ResNeXt-101-32x4d | 72.23 | 87.28 | 0.620 | 77.13 | 89.48 | 0.693 
 | ---------------- | ---- | ---- | ---- | ---- | ---- | ---- |
-| Dataset | DF20 | DF20 | DF20 | DF20M | DF20M | DF20M
+| Dataset | DF20M | DF20M | DF20M | DF20 | DF20 | DF20 | 
 
 ### ViT x CNN Performance Evaluation
 Classification results of selected CNN and ViT architectures on DF20 and DF20\,-\,Mini dataset for two input resolutions [299𐄂299, 384𐄂384].
 
 |  | Top1 [%] | Top3 [%] | F1 | Top1 [%] | Top3 [%] | F1 |
 | ---------------- | ---- | ---- | ---- | ---- | ---- | ---- |
-| EfficientNet-B0     | 65.66 | 83.35 | 0.531 | 70.38 | 85.18 | 0.613
-| EfficientNet-B3     | 66.90 | 83.49 | 0.537 |  𐄂  | 𐄂  | 𐄂
-| SE-ResNeXt-101      | 69.48 | 85.58 | 0.593 |  𐄂  | 𐄂  | 𐄂
-| ViT-Base/16         | 69.37 | 86.54 | 0.589 | 70.38 | 85.18 | 0.613
-| ViT-Large/16        | 70.71 | 86.51 | 0.599 | 75.34 | 88.11 | 0.679
+| EfficientNet-B0     | 65.66 | 83.35 | 0.531 | 70.33 | 85.19 | 0.613
+| EfficientNet-B3     | 67.39 | 83.74 | 0.550 | 72.51 | 86.77 | 0.634
+| SE-ResNeXt-101      | 68.87 | 85.14 | 0.585 | 74.26 | 87.78 | 0.660
+| ViT-Base/16         | 70.11 | 86.81 | 0.600 | 73.51 | 87.55 | 0.655
+| ViT-Large/16        | 71.04 | 86.15 | 0.603 | 75.29 | 88.34 | 0.675
 | ---------------- | ---- | ---- | ---- | ---- | ---- | ---- |
-| Dataset | DF20 | DF20 | DF20 | DF20M | DF20M | DF20M
+| Dataset | DF20M | DF20M | DF20M | DF20 | DF20 | DF20 | 
 
 |  | Top1 [%] | Top3 [%] | F1 | Top1 [%] | Top3 [%] | F1 |
 | ---------------- | ---- | ---- | ---- | ---- | ---- | ---- |
-| EfficientNet-B0  | 70.22 | 85.69 | 0.596 | 75.27 | 88.65 | 0.670
-| EfficientNet-B3  | 72.09 | 87.17 | 0.624 |  𐄂  | 𐄂  | 𐄂
-| SE-ResNeXt-101   | 72.34 | 87.53 | 0.631 |  𐄂  | 𐄂  | 𐄂
-| ViT-Base/16      | 74.84 | 88.74 | 0.655 | 79.40 | 90.93 | 0.724
-| ViT-Large/16     | 75.96 | 89.37 | 0.664 | 81.25 | 91.93 | 0.747
+| EfficientNet-B0  | 69.62 | 85.96 | 0.582 | 75.35 | 88.67 | 0.670
+| EfficientNet-B3  | 71.59 | 87.39 | 0.613 | 77.59 | 90.07 | 0.699
+| SE-ResNeXt-101   | 74.23 | 88.27 | 0.651 | 78.72 | 90.54 | 0.708
+| ViT-Base/16      | 74.23 | 89.12 | 0.639 | 79.48 | 90.95 | 0.727
+| ViT-Large/16     | 75.85 | 89.95 | 0.669 | 80.45 | 91.68 | 0.743
 | ---------------- | ---- | ---- | ---- | ---- | ---- | ---- |
-| Dataset | DF20 | DF20 | DF20 | DF20M | DF20M | DF20M
+| Dataset | DF20M | DF20M | DF20M | DF20 | DF20 | DF20 | 
 
 ### Metadata Usage Experiment
-Performance gains from Fungus observation metadata: H - Habitat, S - Substrate, M - Month, and their combinations, on DF20 and DF20-Mini. ViT-Base/16 with image size 224𐄂224. 
+Performance gains from Fungus observation metadata: H - Habitat, S - Substrate, M - Month, and their combinations, on DF20. 
 
-#### DF20-Mini
+#### DF20 - ViT-Large/16 with image size 384𐄂384. 
 | H | M | S | Top1 [%] | Top3 [%] | F1 |
 | ---- | ---- | ---- | ---- | ---- | ---- |
-| 𐄂  | 𐄂  | 𐄂  |  73.45 | 87.15 | 0.658 |
-| ✔ | 𐄂  | 𐄂  | +2.00 | +1.42 | +0.036  | 
-| 𐄂  | ✔ | 𐄂  | +1.37 | +1.23 | +0.024 |
-| 𐄂  | 𐄂  | ✔ | +0.98 | +0.96 | +0.016 |
-| 𐄂  | ✔ | ✔ | +2.30 | +2.10 | +0.039 |
-| ✔ | 𐄂  | ✔ | +2.92 | +2.41 | +0.051 |
-| ✔ | ✔ | 𐄂  | +3.16 | +2.50 | +0.056 |
-| ✔ | ✔ | ✔ | +3.58 | +3.05 | +0.062 |
- #### DF20
+| 𐄂  | 𐄂  | 𐄂  |  80.45 | 91.68 | 0.743 |
+| ✔ | 𐄂  | 𐄂  | +1.50 | +1.00 | +0.027  | 
+| 𐄂  | ✔ | 𐄂  | +0.95 | +0.62 | +0.014 |
+| 𐄂  | 𐄂  | ✔ | +1.13 | +0.69 | +0.020 |
+| 𐄂  | ✔ | ✔ | +1.93 | +1.27 | +0.032 |
+| ✔ | 𐄂  | ✔ | +2.48 | +1.66 | +0.044 |
+| ✔ | ✔ | 𐄂  | +2.31 | +1.48 | +0.040 |
+| ✔ | ✔ | ✔ | +2.95 | +1.92 | +0.053 |
+ #### DF20-Mini - ViT-Base/16 with image size 224𐄂224. 
 | H | M | S | Top1 | Top3 | F1 |
 | ---- | ---- | ---- | ---- | ---- | ---- |
-| 𐄂  | 𐄂  | 𐄂  | 69.37 | 86.54 | 0.589 |
-| ✔ | 𐄂  | 𐄂  | +1.70 | +1.10 | +0.029  |
-| 𐄂  | ✔ | 𐄂  | +0.77 | +0.19 | +0.011   |
-| 𐄂  | 𐄂  | ✔ | +0.85 | +0.69 | +0.014  |
-| 𐄂  | ✔ | ✔ | +1.29 | +0.80 | +0.020   |
-| ✔ | 𐄂  | ✔ | +2.75 | +2.01 | +0.043   |
-| ✔ | ✔ | 𐄂  | +2.20 | +1.24 | +0.037  | 
-| ✔ | ✔ | ✔ | +2.88 | +1.65 | +0.047 |
+| 𐄂  | 𐄂  | 𐄂  | 73.51 | 87.55 | 0.655 |
+| ✔ | 𐄂  | 𐄂  | +1.94 | +1.50 | +0.040  |
+| 𐄂  | ✔ | 𐄂  | +1.23 | +0.95 | +0.020   |
+| 𐄂  | 𐄂  | ✔ | +1.39 | +1.17 | +0.025  |
+| 𐄂  | ✔ | ✔ | +2.47 | +1.98 | +0.042   |
+| ✔ | 𐄂  | ✔ | +3.23 | +2.47 | +0.062   |
+| ✔ | ✔ | 𐄂  | +3.11 | +2.30 | +0.057  | 
+| ✔ | ✔ | ✔ | +3.81 | +2.84 | +0.070 |
 
 
 
 ## License
 
 The code and dataset is released under the BSD License. There is some limitations for commercial usage.
-In other words, the training data, metadata, and models are are available only for non-commercial research purposes only.
+In other words, the training data, metadata, and models are available only for non-commercial research purposes only.
 
 ## Citation
 
