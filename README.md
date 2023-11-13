@@ -66,7 +66,7 @@ Classification performance of selected CNN architectures on DF20 and DF20 - Mini
 | Dataset | DF20M | DF20M | DF20M | DF20 | DF20 | DF20 | 
 
 ### ViT x CNN Performance Evaluation
-Classification results of selected CNN and ViT architectures on DF20 and DF20\,-\,Mini dataset for two input resolutions [299𐄂299, 384𐄂384].
+Classification results of selected CNN and ViT architectures on DF20 and DF20\,-\,Mini dataset for two input resolutions [224𐄂224, 384𐄂384].
 
 |  | Top1 [%] | Top3 [%] | F1 | Top1 [%] | Top3 [%] | F1 |
 | ---------------- | ---- | ---- | ---- | ---- | ---- | ---- |
