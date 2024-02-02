@@ -45,6 +45,50 @@ jupyter lab --ip 0.0.0.0 --port 8888 --allow-root
 
 ## Results
 
+### Update - CNN Performance Evaluation
+Updated results with the dataset date split based on grouped unique observationIDs.
+
+|  | Top1 [%] | Top3 [%]          | F1 | Top1 [%] | Top3 [%] | F1    |
+| ---------------- | ---- |-------------------| ---- |------|-------|-------|
+| MobileNet-V2         | 60.58 | 78.90 | 48.59 | 66.12 | 82.17 | 55.21 |
+| ResNet-18            | 55.8  | 75.17 | 42.98 | 60.16 | 77.66 | 49.13 |
+| ResNet-34            | 56.8  | 77.17 | 43.21 | 63.54 | 80.30 | 52.88 |
+| ResNet-50            | 60.58 | 79.82 | 48.43 | 66.63 | 82.53 | 56.24 |
+| EfficientNet-B0      | 63.04 | 80.25 | 50.39 | 67.99 | 83.58 | 57.31 |
+| EfficientNet-B1      | 64.14 | 81.22 | 52.59 | 69.20 | 84.28 | 58.54 |
+| EfficientNet-B3      | 63.77 | 80.76 | 51.44 | 70.38 | 85.13 | 59.68 |
+| EfficientNet-B5      | 63.28 | 81.25 | 51.5  | 71.51 | 85.89 | 60.94 |
+| Inception-V3         | 60.79 | 79.06 | 47.88 | 68.49 | 83.74 | 57.76 |
+| InceptionResnet-V2   | 63.06 | 79.68 | 50.49 | 70.16 | 84.75 | 59.34 |
+| Inception-V4         | 63.47 | 81.63 | 51.83 | 70.39 | 85.13 | 60.11 |
+| SE-ResNeXt-101-32x4d | 65.85 | 83.03 | 53.32 | 72.89 | 86.80 | 62.8  |
+| ---------------- | ---- | ---- | ---- | ---- | ----  | ----  |
+| Dataset | DF20M | DF20M             | DF20M | DF20 | DF20  | DF20  | 
+
+
+### Update - ViT x CNN Performance Evaluation
+
+|  | Top1 [%] | Top3 [%] | F1 | Top1 [%] | Top3 [%] | F1 |
+| ---------------- | ---- | ---- | ---- | ---- | ---- | ---- |
+| EfficientNet-B0     | 65.66 | 83.35 | 0.531 | 70.33 | 85.19 | 0.613
+| EfficientNet-B3     | 67.39 | 83.74 | 0.550 | 72.51 | 86.77 | 0.634
+| SE-ResNeXt-101      | 68.87 | 85.14 | 0.585 | 74.26 | 87.78 | 0.660
+| ViT-Base/16         | 70.11 | 86.81 | 0.600 | 73.51 | 87.55 | 0.655
+| ViT-Large/16        | 71.04 | 86.15 | 0.603 | 75.29 | 88.34 | 0.675
+| ---------------- | ---- | ---- | ---- | ---- | ---- | ---- |
+| Dataset | DF20M | DF20M | DF20M | DF20 | DF20 | DF20 | 
+
+|  | Top1 [%] | Top3 [%] | F1 | Top1 [%] | Top3 [%] | F1 |
+| ---------------- | ---- | ---- | ---- | ---- | ---- | ---- |
+| EfficientNet-B0  | 69.62 | 85.96 | 0.582 | 75.35 | 88.67 | 0.670
+| EfficientNet-B3  | 71.59 | 87.39 | 0.613 | 77.59 | 90.07 | 0.699
+| SE-ResNeXt-101   | 74.23 | 88.27 | 0.651 | 78.72 | 90.54 | 0.708
+| ViT-Base/16      | 74.23 | 89.12 | 0.639 | 79.48 | 90.95 | 0.727
+| ViT-Large/16     | 75.85 | 89.95 | 0.669 | 80.45 | 91.68 | 0.743
+| ---------------- | ---- | ---- | ---- | ---- | ---- | ---- |
+| Dataset | DF20M | DF20M | DF20M | DF20 | DF20 | DF20 | 
+
+
 ### CNN Performance Evaluation
 Classification performance of selected CNN architectures on DF20 and DF20 - Mini. All networks share the settings described in Section 6.1 and were trained on 299×299 images.
 
@@ -68,25 +112,25 @@ Classification performance of selected CNN architectures on DF20 and DF20 - Mini
 ### ViT x CNN Performance Evaluation
 Classification results of selected CNN and ViT architectures on DF20 and DF20\,-\,Mini dataset for two input resolutions [224𐄂224, 384𐄂384].
 
-|  | Top1 [%] | Top3 [%] | F1 | Top1 [%] | Top3 [%] | F1 |
-| ---------------- | ---- | ---- | ---- | ---- | ---- | ---- |
-| EfficientNet-B0     | 65.66 | 83.35 | 0.531 | 70.33 | 85.19 | 0.613
-| EfficientNet-B3     | 67.39 | 83.74 | 0.550 | 72.51 | 86.77 | 0.634
-| SE-ResNeXt-101      | 68.87 | 85.14 | 0.585 | 74.26 | 87.78 | 0.660
-| ViT-Base/16         | 70.11 | 86.81 | 0.600 | 73.51 | 87.55 | 0.655
-| ViT-Large/16        | 71.04 | 86.15 | 0.603 | 75.29 | 88.34 | 0.675
-| ---------------- | ---- | ---- | ---- | ---- | ---- | ---- |
-| Dataset | DF20M | DF20M | DF20M | DF20 | DF20 | DF20 | 
+|  | Top1 [%] | Top3 [%] | F1    | Top1 [%] | Top3 [%] | F1    |
+| ---------------- |----------|----------|-------|----------|----------|-------|
+| EfficientNet-B0     | 58.58    | 77.01    | 46.00 | 64.57    | 81.20    | 53.74 |
+| EfficientNet-B3     | 59.31    | 78.79    | 47.83 | 67.13    | 82.74    | 56.61 |
+| SE-ResNeXt-101      | 62.42    | 80.71    | 50.01 | 69.83    | 84.76    | 59.69 |
+| ViT-Base/16         | 65.33    | 82.44    | 52.28 | 70.26    | 84.86    | 60.31 |
+| ViT-Large/16        | xxxxx    | xxxxx    | xxxxx | 73.65    | 87.30    | 64.30 |
+| ---------------- | ----     | ----     | ----  | ----     | ----     | ----  |
+| Dataset | DF20M    | DF20M    | DF20M | DF20     | DF20     | DF20  | 
 
-|  | Top1 [%] | Top3 [%] | F1 | Top1 [%] | Top3 [%] | F1 |
-| ---------------- | ---- | ---- | ---- | ---- | ---- | ---- |
-| EfficientNet-B0  | 69.62 | 85.96 | 0.582 | 75.35 | 88.67 | 0.670
-| EfficientNet-B3  | 71.59 | 87.39 | 0.613 | 77.59 | 90.07 | 0.699
-| SE-ResNeXt-101   | 74.23 | 88.27 | 0.651 | 78.72 | 90.54 | 0.708
-| ViT-Base/16      | 74.23 | 89.12 | 0.639 | 79.48 | 90.95 | 0.727
-| ViT-Large/16     | 75.85 | 89.95 | 0.669 | 80.45 | 91.68 | 0.743
-| ---------------- | ---- | ---- | ---- | ---- | ---- | ---- |
-| Dataset | DF20M | DF20M | DF20M | DF20 | DF20 | DF20 | 
+|  | Top1 [%] | Top3 [%] | F1 | Top1 [%] | Top3 [%] | F1    |
+| ---------------- |----------|---------| ---- | ---- |-------|-------|
+| EfficientNet-B0  | 63.79    | 81.60   | 51.22 | 70.16 | 85.00 | 59.34 |
+| EfficientNet-B3  | 65.14    | 82.46   | 52.55 | 72.47 | 86.63 | 62.31 |
+| SE-ResNeXt-101   | 68.06    | 84.00   | 56.22 | 74.83 | 88.13 | 65.32 |
+| ViT-Base/16      | 69.33    | 85.22   | 57.94 | 76.08 | 88.91 | 66.76 |
+| ViT-Large/16     | xxxxx    | xxxxx   | xxxxx | xxxxx | xxxxx | xxxxx |
+| ---------------- | ----     | ----    | ---- | ---- | ----  | ----  |
+| Dataset | DF20M    | DF20M   | DF20M | DF20 | DF20  | DF20  | 
 
 ### Metadata Usage Experiment
 Performance gains from Fungus observation metadata: H - Habitat, S - Substrate, M - Month, and their combinations, on DF20. 
