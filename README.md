@@ -3,8 +3,11 @@
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/danish-fungi-2020-not-just-another-image/image-classification-on-df20-mini)](https://paperswithcode.com/sota/image-classification-on-df20-mini?p=danish-fungi-2020-not-just-another-image)
 
 # News
-- Metrics slightly updated! Retrained with PyTorch NGC Docker Container 20.07 and on Ampere GPUs only (3080 / 3090)
-- EXIF metadata available! You can read it dirrectly from the images.
+- Updated dataset with ObservationIDs from 2023
+- New train/test splits for DF20M and DF20 with images grouped based on the same ObservationID - No more images of the
+  same observation both in the train and test split simultaneously.
+- Updated baseline performance. All models are retrained and the results are updated with new scores.
+- Model checkpoints are newly available at [Hugging Face Hub Repository](https://huggingface.co/BVRA).
 
 # Danish Fungi 2020 - Not Just Another Image Recognition Dataset
 
@@ -16,9 +19,9 @@ By [Lukas Picek](https://sites.google.com/view/picekl) et al.
 Supplementary material to:
 Danish Fungi 2020 - Not Just Another Image Recognition Dataset 
 
-In order to support research in fine-grained plant classification and to allow full reproducibility of our results, we share the Training Logs and Trained scripts.
-- The Images, Checkpoints and Metadata are not included based on size constrains and will be published after the review.
-
+In order to support research in fine-grained plant classification and to allow full reproducibility of our results, we share the training scripts and data tools.
+- Checkpoints are available at [Hugging Face Hub Repository](https://huggingface.co/BVRA).
+- Train and Validation logs are available at [Weights & Biases Workspace](https://wandb.ai/zcu_cv/DanishFungi2023).
 ## Training Data
 
 Available at -> https://sites.google.com/view/danish-fungi-dataset
@@ -51,9 +54,10 @@ jupyter lab --ip 0.0.0.0 --port 8888 --allow-root
 
 ## Results
 
-### Update - CNN Performance Evaluation
+### **Updated** - CNN Performance Evaluation
 Updated results with the dataset date split based on the unique grouped observationIDs.
-Checkpoints are available at [Hugging Face Hub](https://huggingface.co/BVRA).
+Classification performance of selected CNN architectures on DF20 and DF20 - Mini.
+All networks share the settings described in Section 6.1 and were trained on 299×299 images.
 
 |  | Top1 [%] | Top3 [%]          | F1 | Top1 [%] | Top3 [%] | F1    |
 | ---------------- | ---- |-------------------| ---- |------|-------|-------|
@@ -73,19 +77,23 @@ Checkpoints are available at [Hugging Face Hub](https://huggingface.co/BVRA).
 | Dataset | DF20M | DF20M             | DF20M | DF20 | DF20  | DF20  | 
 
 
-### Update - ViT x CNN Performance Evaluation
+### **Updated** - ViT x CNN Performance Evaluation
 Updated results with the dataset date split based on the unique grouped observationIDs.
-Checkpoints are available at [Hugging Face Hub](https://huggingface.co/BVRA).
+Classification results of selected CNN and ViT architectures on DF20 and DF20 - Mini dataset for two input resolutions [224×224, 384×384].
+
+* 224×224 Resolution:
 
 |  | Top1 [%] | Top3 [%] | F1    | Top1 [%] | Top3 [%] | F1    |
-| ---------------- |----------|----------|-------|----------|----------|-------|
-| EfficientNet-B0     | 58.58    | 77.01    | 46.00 | 64.57    | 81.20    | 53.74 |
-| EfficientNet-B3     | 59.31    | 78.79    | 47.83 | 67.13    | 82.74    | 56.61 |
-| SE-ResNeXt-101      | 62.42    | 80.71    | 50.01 | 69.83    | 84.76    | 59.69 |
-| ViT-Base/16         | 65.33    | 82.44    | 52.28 | 70.26    | 84.86    | 60.31 |
-| ViT-Large/16        | xxxxx    | xxxxx    | xxxxx | 73.65    | 87.30    | 64.30 |
-| ---------------- | ----     | ----     | ----  | ----     | ----     | ----  |
-| Dataset | DF20M    | DF20M    | DF20M | DF20     | DF20     | DF20  | 
+| ---------------- |---------|----------|-------|----------|----------|-------|
+| EfficientNet-B0     | 58.58   | 77.01    | 46.00 | 64.57    | 81.20    | 53.74 |
+| EfficientNet-B3     | 59.31   | 78.79    | 47.83 | 67.13    | 82.74    | 56.61 |
+| SE-ResNeXt-101      | 62.42   | 80.71    | 50.01 | 69.83    | 84.76    | 59.69 |
+| ViT-Base/16         | 65.33   | 82.44    | 52.28 | 70.26    | 84.86    | 60.31 |
+| ViT-Large/16        | 67.52   | 84.46    | 55.9  | 73.65    | 87.30    | 64.30 |
+| ---------------- | ----    | ----     | ----  | ----     | ----     | ----  |
+| Dataset | DF20M   | DF20M    | DF20M | DF20     | DF20     | DF20  | 
+
+* 384×384 Resolution:
 
 |  | Top1 [%] | Top3 [%] | F1 | Top1 [%] | Top3 [%] | F1    |
 | ---------------- |----------|---------| ---- | ---- |-------|-------|
@@ -93,11 +101,11 @@ Checkpoints are available at [Hugging Face Hub](https://huggingface.co/BVRA).
 | EfficientNet-B3  | 65.14    | 82.46   | 52.55 | 72.47 | 86.63 | 62.31 |
 | SE-ResNeXt-101   | 68.06    | 84.00   | 56.22 | 74.83 | 88.13 | 65.32 |
 | ViT-Base/16      | 69.33    | 85.22   | 57.94 | 76.08 | 88.91 | 66.76 |
-| ViT-Large/16     | xxxxx    | xxxxx   | xxxxx | xxxxx | xxxxx | xxxxx |
+| ViT-Large/16     | 72.2     | 87.46   | 60.23 | xxxxx | xxxxx | xxxxx |
 | ---------------- | ----     | ----    | ---- | ---- | ----  | ----  |
 | Dataset | DF20M    | DF20M   | DF20M | DF20 | DF20  | DF20  |
 
-### CNN Performance Evaluation
+### ~~CNN Performance Evaluation~~
 Classification performance of selected CNN architectures on DF20 and DF20 - Mini. All networks share the settings described in Section 6.1 and were trained on 299×299 images.
 
 |  | Top1 [%] | Top3 [%] | F1 | Top1 [%] | Top3 [%] | F1 |
@@ -117,7 +125,7 @@ Classification performance of selected CNN architectures on DF20 and DF20 - Mini
 | ---------------- | ---- | ---- | ---- | ---- | ---- | ---- |
 | Dataset | DF20M | DF20M | DF20M | DF20 | DF20 | DF20 | 
 
-### ViT x CNN Performance Evaluation
+### ~~ViT x CNN Performance Evaluation~~
 Classification results of selected CNN and ViT architectures on DF20 and DF20\,-\,Mini dataset for two input resolutions [224𐄂224, 384𐄂384].
 
 |  | Top1 [%] | Top3 [%] | F1 | Top1 [%] | Top3 [%] | F1 |
