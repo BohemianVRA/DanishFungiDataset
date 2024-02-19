@@ -1,8 +1,8 @@
-name: DanishFungi2023 Production 384x384
-project: DanishFungi2023
+name: DanishFungi2024 Production 384x384
+project: DanishFungi2024
 entity: zcu_cv
 description: 384x384 Image size sweep.
-program: danishfungi2023_train.py
+program: DanishFungi2024_train.py
 method: grid
 parameters:
     architecture:
@@ -17,5 +17,5 @@ command:
   - "--wandb-entity"
   - "zcu_cv"
   - "--wandb-project"
-  - "DanishFungi2023"
+  - "DanishFungi2024"
   - ${args}

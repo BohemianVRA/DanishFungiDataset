@@ -1,35 +1,23 @@
-import os
 import logging
-import torch
-import wandb
+import os
 from typing import Tuple
 
 import pandas as pd
+import torch
 import torch.nn as nn
-
-from scipy.special import softmax
-from torch.utils.data import DataLoader
-
-from fgvc.core.training import train, predict
+import wandb
+from fgvc.core.training import predict, train
 from fgvc.datasets import get_dataloaders
 from fgvc.losses import FocalLossWithLogits, SeesawLossWithLogits
-from fgvc.utils.experiment import (
-    get_optimizer_and_scheduler,
-    load_args,
-    load_config,
-    load_model,
-    load_train_metadata,
-    save_config,
-)
+from fgvc.utils.experiment import (get_optimizer_and_scheduler, load_args,
+                                   load_config, load_model,
+                                   load_train_metadata, save_config)
 from fgvc.utils.utils import set_cuda_device, set_random_seed
-from fgvc.utils.wandb import (
-    finish_wandb,
-    init_wandb,
-    resume_wandb,
-    set_best_scores_in_summary,
-)
-
+from fgvc.utils.wandb import (finish_wandb, init_wandb, resume_wandb,
+                              set_best_scores_in_summary)
 from hfhub import export_model_to_huggingface_hub_from_checkpoint
+from scipy.special import softmax
+from torch.utils.data import DataLoader
 
 logger = logging.getLogger("script")
 
@@ -42,15 +30,17 @@ def load_metadata(config: dict) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """Load metadata of the traning and validation sets."""
     assert "dataset" in config
 
-    train_df = pd.read_csv(f"../metadata/DanishFungi2020-train_metadata_FIX.csv")
+    train_df = pd.read_csv("../metadata/DanishFungi2020-train_metadata_FIX.csv")
 
-    valid_df = pd.read_csv(f"../metadata/DanishFungi2020-val_metadata_FIX.csv")
+    valid_df = pd.read_csv("../metadata/DanishFungi2020-val_metadata_FIX.csv")
 
     train_df["image_path"] = train_df.image_path.apply(
-        lambda path: os.path.join(SHARED_SCRATCH_DIR, "DF20", path))
+        lambda path: os.path.join(SHARED_SCRATCH_DIR, "DF20", path)
+    )
 
     valid_df["image_path"] = valid_df.image_path.apply(
-        lambda path: os.path.join(SHARED_SCRATCH_DIR, "DF20", path))
+        lambda path: os.path.join(SHARED_SCRATCH_DIR, "DF20", path)
+    )
 
     return train_df, valid_df
 
@@ -104,7 +94,7 @@ def evaluate(
         pred_df[col] = valid_df[col]
     wandb.log({"pred_table": wandb.Table(dataframe=pred_df)})
 
-    
+
 def add_metadata_info_to_config(
     config: dict, train_df: pd.DataFrame, valid_df: pd.DataFrame
 ) -> dict:
@@ -156,7 +146,7 @@ def train_clf(
     logger.info("Loading training and validation metadata.")
     train_df, valid_df = load_metadata(config)
     config = add_metadata_info_to_config(config, train_df, valid_df)
-    
+
     # load model and create optimizer and lr scheduler
     logger.info("Creating model, optimizer, and scheduler.")
     model, model_mean, model_std = load_model(config)
@@ -249,9 +239,7 @@ def train_clf(
         config["mean"] = model_mean
         config["std"] = model_std
         export_model_to_huggingface_hub_from_checkpoint(
-            config=config,
-            repo_owner="BVRA",
-            saved_model="f1"
+            config=config, repo_owner="BVRA", saved_model="f1"
         )
     except Exception as e:
         print(f"Exception during export: {e}")

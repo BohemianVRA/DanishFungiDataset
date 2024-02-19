@@ -1,15 +1,15 @@
 import os
+import random
+
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import random
-import matplotlib.pyplot as plt
-
 import wandb
 
 
 def get_results_df(tags: set) -> pd.DataFrame:
     api = wandb.Api()
-    entity, project = 'zcu_cv', "DanishFungi2023"
+    entity, project = "zcu_cv", "DanishFungi2024"
 
     filtered_tags = {
         "tags": {"$in": ["Production"]},  # T
@@ -34,7 +34,11 @@ def get_results_df(tags: set) -> pd.DataFrame:
 
         results_map[run.name] = final_metrics
 
-    results_df = pd.DataFrame.from_dict(results_map, columns=["Val. Accuracy", "Val. Recall@3", "Val. F1"], orient="index")
+    results_df = pd.DataFrame.from_dict(
+        results_map,
+        columns=["Val. Accuracy", "Val. Recall@3", "Val. F1"],
+        orient="index",
+    )
 
     results_df *= 100
 
@@ -50,7 +54,9 @@ def main():
     results_df = get_results_df(tags)
     results_df = results_df.sort_values(["Val. Accuracy", "Val. Recall@3", "Val. F1"])
     results_df.sort_index(inplace=True)
-    result_message = f"\n{dataset_tag} - {resolution_tag} - Production\n{results_df.to_markdown()}\n"
+    result_message = (
+        f"\n{dataset_tag} - {resolution_tag} - Production\n{results_df.to_markdown()}\n"
+    )
     print(result_message)
 
     with open(output_path, "a") as f:

@@ -21,7 +21,7 @@ Danish Fungi 2020 - Not Just Another Image Recognition Dataset
 
 In order to support research in fine-grained plant classification and to allow full reproducibility of our results, we share the training scripts and data tools.
 - Checkpoints are available at [Hugging Face Hub Repository](https://huggingface.co/BVRA).
-- Train and Validation logs are available at [Weights & Biases Workspace](https://wandb.ai/zcu_cv/DanishFungi2023).
+- Train and Validation logs are available at [Weights & Biases Workspace](https://wandb.ai/zcu_cv/DanishFungi2024).
 ## Training Data
 
 Available at -> https://sites.google.com/view/danish-fungi-dataset
@@ -60,21 +60,21 @@ Classification performance of selected CNN architectures on DF20 and DF20 - Mini
 All networks share the settings described in Section 6.1 and were trained on 299×299 images.
 
 |  | Top1 [%] | Top3 [%]          | F1     | Top1 [%] | Top3 [%] | F1     |
-| ---------------- | ---- |-------------------|--------|------|-------|--------|
-| MobileNet-V2         | 60.58 | 78.90 | 0.4859 | 66.12 | 82.17 | 0.5521 |
-| ResNet-18            | 55.8  | 75.17 | 0.4298 | 60.16 | 77.66 | 0.4913 |
-| ResNet-34            | 56.8  | 77.17 | 0.4321 | 63.54 | 80.30 | 0.5288 |
-| ResNet-50            | 60.58 | 79.82 | 0.4843 | 66.63 | 82.53 | 0.5624 |
-| EfficientNet-B0      | 63.04 | 80.25 | 0.5039 | 67.99 | 83.58 | 0.5731 |
-| EfficientNet-B1      | 64.14 | 81.22 | 0.5259 | 69.20 | 84.28 | 0.5854 |
-| EfficientNet-B3      | 63.77 | 80.76 | 0.5144 | 70.38 | 85.13 | 0.5968 |
-| EfficientNet-B5      | 63.28 | 81.25 | 0.5150 | 71.51 | 85.89 | 0.6094 |
-| Inception-V3         | 60.79 | 79.06 | 0.4788 | 68.49 | 83.74 | 0.5776 |
-| InceptionResnet-V2   | 63.06 | 79.68 | 0.5049 | 70.16 | 84.75 | 0.5934 |
-| Inception-V4         | 63.47 | 81.63 | 0.5183 | 70.39 | 85.13 | 0.6011 |
-| SE-ResNeXt-101-32x4d | 65.85 | 83.03 | 0.5332 | 72.89 | 86.80 | 0.6280 |
-| ---------------- | ---- | ---- | ----   | ---- | ----  | ----   |
-| Dataset | DF20M | DF20M             | DF20M  | DF20 | DF20  | DF20   | 
+| ---------------- |----------|-------------------|--------|------|-------|--------|
+| MobileNet-V2         | 60.58    | 78.90 | 0.4859 | 66.12 | 82.17 | 0.5521 |
+| ResNet-18            | 55.80    | 75.17 | 0.4298 | 60.16 | 77.66 | 0.4913 |
+| ResNet-34            | 56.80    | 77.17 | 0.4321 | 63.54 | 80.30 | 0.5288 |
+| ResNet-50            | 60.58    | 79.82 | 0.4843 | 66.63 | 82.53 | 0.5624 |
+| EfficientNet-B0      | 63.04    | 80.25 | 0.5039 | 67.99 | 83.58 | 0.5731 |
+| EfficientNet-B1      | 64.14    | 81.22 | 0.5259 | 69.20 | 84.28 | 0.5854 |
+| EfficientNet-B3      | 63.77    | 80.76 | 0.5144 | 70.38 | 85.13 | 0.5968 |
+| EfficientNet-B5      | 63.28    | 81.25 | 0.5150 | 71.51 | 85.89 | 0.6094 |
+| Inception-V3         | 60.79    | 79.06 | 0.4788 | 68.49 | 83.74 | 0.5776 |
+| InceptionResnet-V2   | 63.06    | 79.68 | 0.5049 | 70.16 | 84.75 | 0.5934 |
+| Inception-V4         | 63.47    | 81.63 | 0.5183 | 70.39 | 85.13 | 0.6011 |
+| SE-ResNeXt-101-32x4d | 65.85    | 83.03 | 0.5332 | 72.89 | 86.80 | 0.6280 |
+| ---------------- | ----     | ---- | ----   | ---- | ----  | ----   |
+| Dataset | DF20M    | DF20M             | DF20M  | DF20 | DF20  | DF20   | 
 
 
 ### **Updated** - ViT x CNN Performance Evaluation
@@ -126,15 +126,15 @@ Additionally, performance gains based on the ObservationID grouping of predictio
 #### DF20 - ViT-Large/16 - 384×384 - With ObservationID grouping and calibration. 
 
 | H | M | S   | Top1 [%] | Top3 [%] | F1      |
-| ---- | ---- |-----| ---- | ---- |---------|
-| 𐄂 | 𐄂 | 𐄂 | 85.89 | 95.47 | 0.7787  |
-| ✔ | 𐄂 | 𐄂 | +1.17 | +0.73 | +0.0304 |
-| 𐄂 | ✔ | 𐄂 | +0.65 | +0.33 | +0.0163 |
-| 𐄂 | 𐄂 | ✔ | +0.46 | +0.45 | +0.0096 |
-| 𐄂 | ✔ | ✔ | +1.07 | +0.71 | +0.0236 |
-| ✔ | 𐄂 | ✔ | +1.64 | +1.03 | +0.0381 |
-| ✔ | ✔ | 𐄂 | +1.8  | +1.05 | +0.0428 |
-| ✔ | ✔ | ✔ | +2.07 | +1.22 | +0.0481 |
+| ---- | ---- |-----|----------| ---- |---------|
+| 𐄂 | 𐄂 | 𐄂 | 85.89    | 95.47 | 0.7787  |
+| ✔ | 𐄂 | 𐄂 | +1.17    | +0.73 | +0.0304 |
+| 𐄂 | ✔ | 𐄂 | +0.65    | +0.33 | +0.0163 |
+| 𐄂 | 𐄂 | ✔ | +0.46    | +0.45 | +0.0096 |
+| 𐄂 | ✔ | ✔ | +1.07    | +0.71 | +0.0236 |
+| ✔ | 𐄂 | ✔ | +1.64    | +1.03 | +0.0381 |
+| ✔ | ✔ | 𐄂 | +1.80    | +1.05 | +0.0428 |
+| ✔ | ✔ | ✔ | +2.07    | +1.22 | +0.0481 |
 
 
  #### DF20 - ViT-Base/16 with image size 224×224.
