@@ -1,8 +1,8 @@
 name: DanishFungi2024 Mini Production 224x224
-project: DanishFungi2024
+project: DanishFungi2023
 entity: zcu_cv
 description: 224x224 Image size sweep.
-program: DanishFungi2024_train.py
+program: danish_fungi_train.py
 method: grid
 parameters:
     architecture:
