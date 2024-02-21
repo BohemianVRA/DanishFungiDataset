@@ -1,50 +1,35 @@
-import gc
-import json
-import os
-import os.path as osp
-import random
-import sys
-import time
-from contextlib import contextmanager
-from functools import partial
-from pathlib import Path
-
 import cv2
-import numpy as np
 import pandas as pd
-import scipy as sp
-import sklearn.metrics
-import timm
-import torch
-import torch.nn as nn
-import tqdm
 from albumentations import Compose, Normalize, Resize
 from albumentations.pytorch import ToTensorV2
-from PIL import Image
-from scipy.special import softmax
-from sklearn.metrics import accuracy_score, f1_score, top_k_accuracy_score
-from torch.optim import SGD, Adam
-from torch.optim.lr_scheduler import CosineAnnealingLR
-from torch.utils.data import DataLoader, Dataset
-
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-device
+from torch.utils.data import Dataset
 
 
-class TestDataset(Dataset):
-    def __init__(self, df, selected_features: list, transform=None):
+class ExtraFeaturesDataset(Dataset):
+    """ Supply extra features from the dataset."""
+    def __init__(
+            self,
+            df: pd.DataFrame,
+            image_path_feature: str,
+            target_feature: str,
+            extra_features: list[str],
+            transform=None
+    ):
         self.df = df
-        self.selected_features = selected_features
+        self.image_path_feature = image_path_feature
+        self.target_feature = target_feature
+        self.extra_features = extra_features
         self.transform = transform
 
     def __len__(self):
         return len(self.df)
 
-    def __getitem__(self, idx):
+    def get_extra_features_names(self):
+        return self.extra_features
 
-        file_path = self.df["image_path"].values[idx]
-        label = self.df["class_id"].values[idx]
+    def __getitem__(self, idx: int) -> tuple:
+        file_path = self.df[self.image_path_feature].values[idx]
+        label = self.df[self.target_feature].values[idx]
         image = cv2.imread(file_path)
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
@@ -53,14 +38,13 @@ class TestDataset(Dataset):
             image = augmented["image"]
 
         selected_feature_values = {
-            feature: self.df[feature].values[idx] for feature in self.selected_features
+            feature: self.df[feature].values[idx] for feature in self.extra_features
         }
 
         return image, label, file_path, selected_feature_values
 
 
 def get_transforms(model_mean, model_std, image_size):
-
     return Compose(
         [Resize(*image_size), Normalize(mean=model_mean, std=model_std), ToTensorV2()]
     )
