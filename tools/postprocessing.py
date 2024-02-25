@@ -10,6 +10,57 @@ from sklearn.metrics import f1_score, accuracy_score, top_k_accuracy_score
 from dataset_cls import ExtraFeaturesDataset
 
 
+def post_processing_pipeline(
+        df: pd.DataFrame,
+        model,
+        dataloader,
+        device,
+        target_feature: str,
+        selected_features: list[str],
+) -> dict[str, dict]:
+    metadata_distributions = {}
+    for feature in selected_features:
+        metadata_distributions[feature] = get_target_to_feature_conditional_distributions(
+            df,
+            feature,
+            target_feature,
+            add_to_missing=False
+        )
+
+    target_distribution = df.groupby(target_feature).size() / len(df)
+
+    predictions, predictions_raw, ground_truth_labels, ground_truth_features = predict_with_features(model, dataloader, device)
+
+    feature_prior_ratios = {}
+    weighted_predictions_complete = {}
+    for feature in selected_features:
+        metadata_distribution = metadata_distributions[feature]
+        seen_feature_values = ground_truth_features[feature]
+
+        weighted_predictions, weighted_predictions_raw, feature_prior_ratio = weight_predictions_by_feature_distribution(
+            target_to_feature_conditional_distributions=metadata_distribution,
+            target_distribution=target_distribution,
+            ground_truth_labels=ground_truth_labels,
+            raw_predictions=predictions_raw,
+            ground_truth_feature_categories=seen_feature_values
+        )
+        weighted_predictions_complete[feature] = {
+            "predictions": weighted_predictions,
+            "predictions_raw": weighted_predictions_raw
+        }
+        feature_prior_ratios[feature] = feature_prior_ratio
+
+    merged_predictions = post_process_prior_combinations(predictions_raw, feature_prior_ratios)
+    weighted_predictions_complete.update(merged_predictions)
+
+    for combination, _weighted_predictions in weighted_predictions_complete.items():
+        _predictions = _weighted_predictions["predictions"]
+        _predictions_raw = _weighted_predictions["predictions_raw"]
+        print(combination, get_metrics(ground_truth_labels, _predictions, _predictions_raw))
+
+    return weighted_predictions_complete
+
+
 def get_target_to_feature_conditional_distributions(
     df: pd.DataFrame, feature: str, target_feature: str, add_to_missing: bool = True
 ) -> pd.Series:
@@ -45,7 +96,8 @@ def predict_with_features(
         model,
         loader: DataLoader,
         device,
-) -> tuple:
+) -> tuple[list, list, list, dict]:
+    """ Makes predictions on the dataloader, which must contain ExtraFeaturesDataset. Returns predictions and ground truth target labels and extra features (metadata for post-processing)"""
     assert isinstance(loader.dataset, ExtraFeaturesDataset), "Dataset in loader must be of type ExtraFeaturesDataset"
     extra_features = loader.dataset.get_extra_features_names()
     batch_size = loader.batch_size
@@ -70,7 +122,7 @@ def predict_with_features(
         for extra_feature in extra_features:
             ground_truth_features[extra_feature].extend(features[extra_feature])
 
-    return predictions, predictions_raw, ground_truth_labels, ground_truth_features
+    return predictions.tolist(), predictions_raw, ground_truth_labels, ground_truth_features
 
 
 def weight_predictions_by_feature_distribution(
@@ -94,7 +146,7 @@ def weight_predictions_by_feature_distribution(
     """
     weighted_predictions = []
     weighted_predictions_raw = []
-    prior_ratios = []
+    feature_prior_ratios = []
 
     for lbl, raw_prediction, ground_truth_feature_category in tqdm.tqdm(
         zip(ground_truth_labels, raw_predictions, ground_truth_feature_categories),
@@ -113,11 +165,37 @@ def weight_predictions_by_feature_distribution(
         prior_ratio = p_feature / target_distribution
         max_index = np.argmax(prior_ratio * predictions)
 
-        prior_ratios.append(prior_ratio)
+        feature_prior_ratios.append(prior_ratio)
         weighted_predictions_raw.append(prior_ratio * predictions)
         weighted_predictions.append(max_index)
 
-    return prior_ratios, weighted_predictions, weighted_predictions_raw
+    return weighted_predictions, weighted_predictions_raw, feature_prior_ratios
+
+
+def post_process_prior_combinations(
+        raw_predictions: list,
+        feature_prior_ratios: dict
+):
+    features = list(feature_prior_ratios.keys())
+    metrics_by_combination = {}
+    all_combinations_selected_features = []
+    for num_features in range(2, len(features) + 1):
+        all_combinations_selected_features.extend(combinations(features, num_features))
+
+    merged_predictions = {}
+    for combination in all_combinations_selected_features:
+        selected_feature_prior_ratios = [feature_prior_ratios[feature] for feature in combination]
+
+        _merged_predictions, _merged_predictions_raw = weight_predictions_combined_feature_priors(
+            raw_predictions=raw_predictions,
+            feature_prior_ratios=selected_feature_prior_ratios
+        )
+        merged_predictions[f"{'+'.join(combination)}"] = {
+            "predictions": _merged_predictions,
+            "predictions_raw": _merged_predictions_raw
+        }
+
+    return merged_predictions
 
 
 def weight_predictions_combined_feature_priors(
@@ -141,3 +219,15 @@ def weight_predictions_combined_feature_priors(
         merged_predictions.append(max_index)
 
     return merged_predictions, merged_predictions_raw
+
+
+def get_metrics(
+        ground_truth_labels: list,
+        predictions: list,
+        predictions_raw: list,
+):
+    f1 = f1_score(ground_truth_labels, predictions, average='macro')
+    accuracy = accuracy_score(ground_truth_labels, predictions)
+    recall_3 = top_k_accuracy_score(ground_truth_labels, predictions_raw, k=3)
+    return f1, accuracy, recall_3
+
