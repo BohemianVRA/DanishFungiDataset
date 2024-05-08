@@ -43,7 +43,7 @@ def get_results_df(tags: set) -> pd.DataFrame:
 
 def main():
     resolution_tag = "224x224"
-    dataset_tag = "DF20_FIX"
+    dataset_tag = "DF24_FIX"
     output_path = f"../output/{dataset_tag}_{resolution_tag}.txt"
     tags = {resolution_tag, "Production", dataset_tag}
     results_df = get_results_df(tags)

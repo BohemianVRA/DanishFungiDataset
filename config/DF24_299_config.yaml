@@ -1,7 +1,7 @@
 # data
 augmentations: 'light'
 image_size: [299, 299]  # [height, width]
-dataset: 'DF20M'
+dataset: 'DF24'
 
 # model
 architecture: 'mobilenetv2_100.ra_in1k'
@@ -14,11 +14,11 @@ scheduler: 'plateau'
 epochs: 100
 learning_rate: 0.01
 batch_size: 64
-accumulation_steps: 1
+accumulation_steps: 100
 
 # other
 random_seed: 777
-workers: 12
+workers: 6
 multigpu: False
-tags: ["DanishFungi2024", "299x299", "Production"]  # W&B Run tags
+tags: ["DF24_FIX", "299x299", "Production"]  # W&B Run tags
 root_path: "../"

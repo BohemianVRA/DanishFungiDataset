@@ -35,11 +35,11 @@ def load_metadata(config: dict) -> Tuple[pd.DataFrame, pd.DataFrame]:
     valid_df = pd.read_csv("../metadata/DanishFungi2020-val_metadata_FIX.csv")
 
     train_df["image_path"] = train_df.image_path.apply(
-        lambda path: os.path.join(SHARED_SCRATCH_DIR, "DF20", path)
+        lambda path: os.path.join(SHARED_SCRATCH_DIR, "DF24", path)
     )
 
     valid_df["image_path"] = valid_df.image_path.apply(
-        lambda path: os.path.join(SHARED_SCRATCH_DIR, "DF20", path)
+        lambda path: os.path.join(SHARED_SCRATCH_DIR, "DF24", path)
     )
 
     return train_df, valid_df

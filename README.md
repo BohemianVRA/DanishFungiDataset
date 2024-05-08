@@ -1,10 +1,10 @@
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/danish-fungi-2020-not-just-another-image/image-classification-on-df20)](https://paperswithcode.com/sota/image-classification-on-df20?p=danish-fungi-2020-not-just-another-image)
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/danish-fungi-2020-not-just-another-image/image-classification-on-DF20)](https://paperswithcode.com/sota/image-classification-on-DF20?p=danish-fungi-2020-not-just-another-image)
 
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/danish-fungi-2020-not-just-another-image/image-classification-on-df20-mini)](https://paperswithcode.com/sota/image-classification-on-df20-mini?p=danish-fungi-2020-not-just-another-image)
 
 # News
 - Updated dataset with ObservationIDs from 2023
-- New train/test splits for DF20M and DF20 with images grouped based on the same ObservationID - No more images of the
+- New train/test splits for DF24M and DF24 with images grouped based on the same ObservationID - No more images of the
   same observation both in the train and test split simultaneously.
 - Updated baseline performance. All models are retrained and the results are updated with new scores.
 - Model checkpoints are newly available at [Hugging Face Hub Repository](https://huggingface.co/BVRA).
@@ -62,7 +62,7 @@ To post-process model predictions use _tools.post_processing.ipynb_
 
 ### **Updated** - CNN Performance Evaluation
 Updated results with the dataset date split based on the unique grouped observationIDs.
-Classification performance of selected CNN architectures on DF20 and DF20 - Mini.
+Classification performance of selected CNN architectures on DF24 and DF24 - Mini.
 All networks share the settings described in Section 6.1 and were trained on 299×299 images.
 
 |  | Top1 [%] | Top3 [%]          | F1 [%]   | Top1 [%] | Top3 [%] | F1 [%]   |
@@ -80,12 +80,12 @@ All networks share the settings described in Section 6.1 and were trained on 299
 | Inception-V4         | 63.47    | 81.63 | 51.83 | 70.39 | 85.13 | 60.11 |
 | SE-ResNeXt-101-32x4d | 65.85    | 83.03 | 53.32 | 72.89 | 86.80 | 62.80 |
 | ---------------- | ----     | ---- | ----  | ---- | ----  | ----  |
-| Dataset | DF20M    | DF20M             | DF20M | DF20 | DF20  | DF20  | 
+| Dataset | DF24M    | DF24M             | DF24M | DF24 | DF24  | DF24  | 
 
 
 ### **Updated** - ViT x CNN Performance Evaluation
 Updated results with the dataset date split based on the unique grouped observationIDs.
-Classification results of selected CNN and ViT architectures on DF20 and DF20 - Mini dataset for two input resolutions 224×224, 384×384.
+Classification results of selected CNN and ViT architectures on DF24 and DF24 - Mini dataset for two input resolutions 224×224, 384×384.
 
 * 224×224 Resolution:
 
@@ -97,7 +97,7 @@ Classification results of selected CNN and ViT architectures on DF20 and DF20 - 
 | ViT-Base/16         | 65.33   | 82.44    | 52.28 | 70.26    | 84.86  | 60.31 |
 | ViT-Large/16        | 67.52   | 84.46    | 55.90 | 73.65    | 87.30  | 64.30 |
 | ---------------- | ----    | ----     | ----  | ----     | ----   | ----  |
-| Dataset | DF20M   | DF20M    | DF20M | DF20     | DF20   | DF20  | 
+| Dataset | DF24M   | DF24M    | DF24M | DF24     | DF24   | DF24  | 
 
 * 384×384 Resolution:
 
@@ -109,14 +109,14 @@ Classification results of selected CNN and ViT architectures on DF20 and DF20 - 
 | ViT-Base/16      | 69.33    | 85.22   | 57.94 | 76.08    | 88.91    | 66.76 |
 | ViT-Large/16     | 72.20    | 87.46   | 60.23 | 78.81    | 90.64    | 70.25 |
 | ---------------- | ----     | ----    | ----  | ----     | ----     | ----  |
-| Dataset | DF20M    | DF20M   | DF20M | DF20     | DF20     | DF20  |
+| Dataset | DF24M    | DF24M   | DF24M | DF24     | DF24     | DF24  |
 
 ### **Updated** - Metadata Usage Experiment
 
 Performance gains from Fungus observation metadata: H - Habitat, S - Substrate, M - Month, and their combinations.
 Additionally, performance gains based on the ObservationID grouping of predictions (average over class score) and calibration.
 
-#### DF20 - ViT-Large/16 with image size 384×384. 
+#### DF24 - ViT-Large/16 with image size 384×384. 
 
 | H | M | S   | Top1 [%] | Top3 [%] | F1 [%] |
 | ---- | ---- |-----| ---- | ---- |--------|
@@ -129,7 +129,7 @@ Additionally, performance gains based on the ObservationID grouping of predictio
 | ✔ | ✔ | 𐄂 | +2.01 | +1.54 | +3.98  |
 | ✔ | ✔ | ✔ | +2.53 | +1.95 | +5.13  |
 
-#### DF20 - ViT-Large/16 - 384×384 - With ObservationID grouping and calibration. 
+#### DF24 - ViT-Large/16 - 384×384 - With ObservationID grouping and calibration. 
 
 | H | M | S   | Top1 [%] | Top3 [%] | F1 [%] |
 | ---- | ---- |-----|----------| ---- |--------|
@@ -143,7 +143,7 @@ Additionally, performance gains based on the ObservationID grouping of predictio
 | ✔ | ✔ | ✔ | +2.07    | +1.22 | +4.81  |
 
 
- #### DF20 - ViT-Base/16 with image size 224×224.
+ #### DF24 - ViT-Base/16 with image size 224×224.
 | H | M | S | Top1 | Top3 | F1    |
 | ---- | ---- | ---- | ---- | ---- |-------|
 | 𐄂 | 𐄂 | 𐄂 | 70.33 | 84.88 | 60.44 |
@@ -156,7 +156,7 @@ Additionally, performance gains based on the ObservationID grouping of predictio
 | ✔ | ✔ | ✔ | +3.56 | +3.22 | +6.39 |
 
 
- #### DF20 - ViT-Base/16 - 224×224 - With ObservationID grouping and calibration. 
+ #### DF24 - ViT-Base/16 - 224×224 - With ObservationID grouping and calibration. 
 
 | H | M | S | Top1 | Top3 | F1    |
 | ---- | ---- | ---- | ---- | ---- |-------|
@@ -171,7 +171,7 @@ Additionally, performance gains based on the ObservationID grouping of predictio
 
 
 ### ~~CNN Performance Evaluation~~
-Classification performance of selected CNN architectures on DF20 and DF20 - Mini. All networks share the settings described in Section 6.1 and were trained on 299×299 images.
+Classification performance of selected CNN architectures on DF24 and DF24 - Mini. All networks share the settings described in Section 6.1 and were trained on 299×299 images.
 
 |  | Top1 [%] | Top3 [%] | F1 | Top1 [%] | Top3 [%] | F1 |
 | ---------------- | ---- | ---- | ---- | ---- | ---- | ---- |
@@ -188,10 +188,10 @@ Classification performance of selected CNN architectures on DF20 and DF20 - Mini
 | Inception-V4         | 67.45 | 82.78 | 0.560 | 73.00 | 86.87 | 0.637
 | SE-ResNeXt-101-32x4d | 72.23 | 87.28 | 0.620 | 77.13 | 89.48 | 0.693 
 | ---------------- | ---- | ---- | ---- | ---- | ---- | ---- |
-| Dataset | DF20M | DF20M | DF20M | DF20 | DF20 | DF20 | 
+| Dataset | DF24M | DF24M | DF24M | DF24 | DF24 | DF24 | 
 
 ### ~~ViT x CNN Performance Evaluation~~
-Classification results of selected CNN and ViT architectures on DF20 and DF20\,-\,Mini dataset for two input resolutions [224𐄂224, 384𐄂384].
+Classification results of selected CNN and ViT architectures on DF24 and DF24\,-\,Mini dataset for two input resolutions [224𐄂224, 384𐄂384].
 
 |  | Top1 [%] | Top3 [%] | F1 | Top1 [%] | Top3 [%] | F1 |
 | ---------------- | ---- | ---- | ---- | ---- | ---- | ---- |
@@ -201,7 +201,7 @@ Classification results of selected CNN and ViT architectures on DF20 and DF20\,-
 | ViT-Base/16         | 70.11 | 86.81 | 0.600 | 73.51 | 87.55 | 0.655
 | ViT-Large/16        | 71.04 | 86.15 | 0.603 | 75.29 | 88.34 | 0.675
 | ---------------- | ---- | ---- | ---- | ---- | ---- | ---- |
-| Dataset | DF20M | DF20M | DF20M | DF20 | DF20 | DF20 | 
+| Dataset | DF24M | DF24M | DF24M | DF24 | DF24 | DF24 | 
 
 |  | Top1 [%] | Top3 [%] | F1 | Top1 [%] | Top3 [%] | F1 |
 | ---------------- | ---- | ---- | ---- | ---- | ---- | ---- |
@@ -211,12 +211,12 @@ Classification results of selected CNN and ViT architectures on DF20 and DF20\,-
 | ViT-Base/16      | 74.23 | 89.12 | 0.639 | 79.48 | 90.95 | 0.727
 | ViT-Large/16     | 75.85 | 89.95 | 0.669 | 80.45 | 91.68 | 0.743
 | ---------------- | ---- | ---- | ---- | ---- | ---- | ---- |
-| Dataset | DF20M | DF20M | DF20M | DF20 | DF20 | DF20 | 
+| Dataset | DF24M | DF24M | DF24M | DF24 | DF24 | DF24 | 
 
 ### ~~Metadata Usage Experiment~~
-Performance gains from Fungus observation metadata: H - Habitat, S - Substrate, M - Month, and their combinations, on DF20. 
+Performance gains from Fungus observation metadata: H - Habitat, S - Substrate, M - Month, and their combinations, on DF24. 
 
-#### DF20 - ViT-Large/16 with image size 384𐄂384. 
+#### DF24 - ViT-Large/16 with image size 384𐄂384. 
 | H | M | S | Top1 [%] | Top3 [%] | F1 |
 | ---- | ---- | ---- | ---- | ---- | ---- |
 | 𐄂  | 𐄂  | 𐄂  |  80.45 | 91.68 | 0.743 |
@@ -227,7 +227,7 @@ Performance gains from Fungus observation metadata: H - Habitat, S - Substrate, 
 | ✔ | 𐄂  | ✔ | +2.48 | +1.66 | +0.044 |
 | ✔ | ✔ | 𐄂  | +2.31 | +1.48 | +0.040 |
 | ✔ | ✔ | ✔ | +2.95 | +1.92 | +0.053 |
- #### DF20-Mini - ViT-Base/16 with image size 224𐄂224. 
+ #### DF24-Mini - ViT-Base/16 with image size 224𐄂224. 
 | H | M | S | Top1 | Top3 | F1 |
 | ---- | ---- | ---- | ---- | ---- | ---- |
 | 𐄂  | 𐄂  | 𐄂  | 73.51 | 87.55 | 0.655 |

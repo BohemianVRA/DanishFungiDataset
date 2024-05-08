@@ -1,7 +1,7 @@
 # data
 augmentations: 'light'
 image_size: [384, 384]  # [height, width]
-dataset: 'DF20'
+dataset: 'DF24M'
 
 # model
 architecture: 'vit_base_patch16_384'
@@ -20,5 +20,5 @@ accumulation_steps: 1
 random_seed: 777
 workers: 12
 multigpu: False
-tags: ["DF20_FIX", "384x384", "Production"]  # W&B Run tags
+tags: ["DanishFungi2024", "384x384", "Production"]  # W&B Run tags
 root_path: "../"

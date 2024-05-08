@@ -1,7 +1,7 @@
 # data
 augmentations: 'light'
 image_size: [224, 224]  # [height, width]
-dataset: 'DF20M'
+dataset: 'DF24M'
 
 # model
 architecture: 'vit_base_patch16_224'

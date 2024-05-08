@@ -6,14 +6,15 @@ from torch.utils.data import Dataset
 
 
 class ExtraFeaturesDataset(Dataset):
-    """ Supply extra features from the dataset."""
+    """Supply extra features from the dataset."""
+
     def __init__(
-            self,
-            df: pd.DataFrame,
-            image_path_feature: str,
-            target_feature: str,
-            extra_features: list[str],
-            transform=None
+        self,
+        df: pd.DataFrame,
+        image_path_feature: str,
+        target_feature: str,
+        extra_features: list[str],
+        transform=None,
     ):
         self.df = df
         self.image_path_feature = image_path_feature

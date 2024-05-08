@@ -1,4 +1,4 @@
-name: DanishFungi2024 Mini Production 384x384
+name: DanishFungi2024 Production 384x384
 project: DanishFungi2023
 entity: zcu_cv
 description: 384x384 Image size sweep.
@@ -13,7 +13,7 @@ command:
   - ${interpreter}
   - ${program}
   - "--config-path"
-  - "../config/DF20M_384_config.yaml"
+  - "../config/DF24M_384_config.yaml"
   - "--wandb-entity"
   - "zcu_cv"
   - "--wandb-project"
