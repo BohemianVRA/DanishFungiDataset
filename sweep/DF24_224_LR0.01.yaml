@@ -1,18 +1,16 @@
-name: DanishFungi2024 Mini Production 384x384
+name: DanishFungi2024 224x224
 project: DF2024
 entity: zcu_cv
-description: 384x384 Image size sweep.
+description: 224x224 Image size sweep.
 program: danish_fungi_train.py
 method: grid
 parameters:
     architecture:
         values: [
-        'vit_base_patch16_384.augreg_in21k_ft_in1k',
-        'beit_base_patch16_384.in22k_ft_in22k_in1k',
+        'vit_base_patch16_224.augreg_in21k_ft_in1k',
+        'beit_base_patch16_224.in22k_ft_in22k_in1k',
         'convnext_base.fb_in1k',
-        'swin_base_patch4_window7_384.ms_in1k',
-        'resnet50.a1_in1k',
-        'resnext50_32x4d.a1_in1k',
+        'swin_base_patch4_window7_224.ms_in1k',
         'tf_efficientnet_b3.ap_in1k',
         'tf_efficientnetv2_b3.in21k_ft_in1k']
 command:
@@ -20,7 +18,7 @@ command:
   - ${interpreter}
   - ${program}
   - "--config-path"
-  - "../config/DF24_384_config.yaml"
+  - "../config/DF24_224_config.yaml"
   - "--wandb-entity"
   - "zcu_cv"
   - "--wandb-project"

@@ -1,4 +1,4 @@
-name: DanishFungi2024 Mini Production 384x384
+name: DanishFungi2024 384x384
 project: DF2024
 entity: zcu_cv
 description: 384x384 Image size sweep.
@@ -11,8 +11,6 @@ parameters:
         'beit_base_patch16_384.in22k_ft_in22k_in1k',
         'convnext_base.fb_in1k',
         'swin_base_patch4_window7_384.ms_in1k',
-        'resnet50.a1_in1k',
-        'resnext50_32x4d.a1_in1k',
         'tf_efficientnet_b3.ap_in1k',
         'tf_efficientnetv2_b3.in21k_ft_in1k']
 command:

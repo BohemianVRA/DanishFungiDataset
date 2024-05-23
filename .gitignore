@@ -134,6 +134,8 @@ dmypy.json
 
 # Environment
 .idea/
+runs/
+wandb/
 
 # Mac filesystem
 .DS_Store

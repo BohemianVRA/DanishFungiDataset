@@ -1,0 +1,23 @@
+# data
+augmentations: 'light'
+image_size: [224, 224]  # [height, width]
+dataset: 'DanishFungi2023-v0.1'
+
+# model
+architecture: 'vit_large_patch16_224.augreg_in21k_ft_in1k'
+
+# training
+loss: 'CrossEntropyLoss'
+optimizer: 'SGD'
+scheduler: 'cosine'
+epochs: 100
+learning_rate: 0.01
+batch_size: 64
+accumulation_steps: 4
+
+# other
+random_seed: 777
+workers: 12
+multigpu: False
+tags: ["Fine-tuning", "Dino", "DanishFungi2023"]  # W&B Run tags
+root_path: "./"

@@ -4,21 +4,20 @@ image_size: [224, 224]  # [height, width]
 dataset: 'DF24M'
 
 # model
-architecture: 'resnet50.a1_in1k'
+architecture: 'vit_base_patch16_224.augreg_in21k_ft_in1k'
 
 # training
-train:
 loss: 'SeeSawLoss'
 optimizer: 'SGD'
 scheduler: 'plateau'
 epochs: 50
-learning_rate: 0.1
-batch_size: 32
-accumulation_steps: 8
+learning_rate: 0.01
+batch_size: 64
+accumulation_steps: 4
 
 # other
 random_seed: 777
-workers: 8
+workers: 6
 multigpu: False
-tags: ["DanishFungi2024", "224x224", "test"]  # W&B Run tags
-root_path: "../"
+tags: ["Fine-tuning", "Dino", "DanishFungi2023"]  # W&B Run tags
+root_path: "./"

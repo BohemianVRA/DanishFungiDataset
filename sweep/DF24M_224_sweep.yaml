@@ -1,12 +1,20 @@
 name: DanishFungi2024 Mini Production 224x224
-project: DanishFungi2023
+project: DanishFungi2024
 entity: zcu_cv
 description: 224x224 Image size sweep.
 program: danish_fungi_train.py
 method: grid
 parameters:
     architecture:
-        values: ['tf_efficientnet_b0.ap_in1k',  "tf_efficientnet_b3.ap_in1k", 'legacy_seresnext101_32x4d.in1k', 'vit_base_patch16_224', 'vit_large_patch16_224']
+        values: [
+        'vit_base_patch16_224.augreg_in21k_ft_in1k',
+        'beit_base_patch16_224.in22k_ft_in22k_in1k',
+        'convnext_base.fb_in1k',
+        'swin_base_patch4_window7_224.ms_in1k',
+        'resnet50.a1_in1k',
+        'resnext50_32x4d.a1_in1k',
+        'tf_efficientnet_b3.ap_in1k',
+        'tf_efficientnetv2_b3.in21k_ft_in1k']
 
 command:
   - ${env}

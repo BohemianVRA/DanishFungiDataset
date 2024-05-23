@@ -4,7 +4,7 @@ image_size: [224, 224]  # [height, width]
 dataset: 'DF24'
 
 # model
-architecture: 'vit_base_patch16_224'
+architecture: 'resnet50.a1_in1k'
 
 # training
 train:
@@ -12,13 +12,13 @@ loss: 'SeeSawLoss'
 optimizer: 'SGD'
 scheduler: 'plateau'
 epochs: 50
-learning_rate: 0.1
+learning_rate: 0.01
 batch_size: 32
 accumulation_steps: 8
 
 # other
 random_seed: 777
-workers: 12
+workers: 8
 multigpu: False
-tags: ["DanishFungi2024", "224x224"]  # W&B Run tags
+tags: ["DanishFungi2024", "224x224", "Convolutional"]  # W&B Run tags
 root_path: "../"

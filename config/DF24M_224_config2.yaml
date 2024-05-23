@@ -1,10 +1,10 @@
 # data
 augmentations: 'vit_heavy'
 image_size: [224, 224]  # [height, width]
-dataset: 'DF24'
+dataset: 'DF24M'
 
 # model
-architecture: 'vit_base_patch16_224'
+architecture: 'resnext50_32x4d.a1_in1k'
 
 # training
 train:
@@ -18,7 +18,7 @@ accumulation_steps: 8
 
 # other
 random_seed: 777
-workers: 12
+workers: 8
 multigpu: False
-tags: ["DanishFungi2024", "224x224"]  # W&B Run tags
+tags: ["DanishFungi2024", "224x224", "test"]  # W&B Run tags
 root_path: "../"

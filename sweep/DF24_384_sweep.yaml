@@ -13,7 +13,7 @@ command:
   - ${interpreter}
   - ${program}
   - "--config-path"
-  - "../config/DF24M_384_config.yaml"
+  - "../config/DF24_384_config.yaml"
   - "--wandb-entity"
   - "zcu_cv"
   - "--wandb-project"

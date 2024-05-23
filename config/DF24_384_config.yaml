@@ -1,5 +1,5 @@
 # data
-augmentations: 'light'
+augmentations: 'vit_heavy'
 image_size: [384, 384]  # [height, width]
 dataset: 'DF24'
 
@@ -8,17 +8,17 @@ architecture: 'vit_base_patch16_384'
 
 # training
 train:
-loss: 'CrossEntropyLoss'
+loss: 'SeeSawLoss'
 optimizer: 'SGD'
 scheduler: 'plateau'
-epochs: 100
+epochs: 50
 learning_rate: 0.01
-batch_size: 64
-accumulation_steps: 1
+batch_size: 32
+accumulation_steps: 8
 
 # other
 random_seed: 777
 workers: 12
 multigpu: False
-tags: ["DF24_FIX", "384x384", "Production"]  # W&B Run tags
+tags: ["DanishFungi2024", "384x384"]  # W&B Run tags
 root_path: "../"

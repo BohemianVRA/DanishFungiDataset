@@ -216,7 +216,7 @@ def get_default_model_card(config: dict, repo_name: str) -> str:
 
     model_mean = config.get("mean", "???")
     model_std = config.get("std", "???")
-
+    model_params = config.get("params", "???")
     model_card = f"""
 ---
 tags:
@@ -232,7 +232,7 @@ license: cc-by-nc-4.0
 ## Model Details
 - **Model Type:** Danish Fungi Classification 
 - **Model Stats:**
-  - Params (M): ??
+  - Params (M): {model_params}
   - Image size: {image_size} x {image_size}
 - **Papers:**
 - **Original:** ??
@@ -295,7 +295,7 @@ def create_model_card_file(model_card: str, exp_path: str) -> str:
     return model_card_path
 
 
-def hfhub_load_args() -> tuple[argparse.Namespace, list[str]]:
+def hfhub_load_args():
     """Load script arguments."""
 
     parser = argparse.ArgumentParser()
