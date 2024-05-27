@@ -136,6 +136,9 @@ dmypy.json
 .idea/
 runs/
 wandb/
+metadata/
+experiments/
+logs/
 
 # Mac filesystem
 .DS_Store

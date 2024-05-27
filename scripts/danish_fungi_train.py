@@ -27,36 +27,32 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 logger = logging.getLogger("script")
 
 SCRATCH_DIR = os.getenv("SCRATCHDIR", "/media/Data-10T-1/Data/")
-SHARED_SCRATCH_DIR = "/scratch.shared/picekl"
+SHARED_SCRATCH_DIR = "/local/nahouby/Datasets/DanishFungi2024/DF24m"
 # API_BASE_PATH = "http://147.228.47.72:12080/files/"
 
 
 def load_metadata(config: dict) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """Load metadata of the traning and validation sets."""
     assert "dataset" in config
-    
-    train_df = pd.read_csv("../metadata/DanishFungi2024-train-metadata-full-DEV.csv")
+        
+    train_df = pd.read_csv("../metadata/DanishFungi2024m-train-metadata-DEV.csv")
 
-
-    valid_df = pd.read_csv("../metadata/DanishFungi2024-val-metadata-full-DEV.csv")
+    valid_df = pd.read_csv("../metadata/DanishFungi2024m-val-metadata-DEV.csv")
     valid_df = valid_df[valid_df.class_id != -1].reset_index(drop=True)
     
-    test_df = pd.read_csv("../metadata/DanishFungi2024-test-metadata-full-DEV.csv")
+    test_df = pd.read_csv("../metadata/DanishFungi2024m-test-metadata-DEV.csv")
     test_df = test_df[test_df.class_id != -1].reset_index(drop=True)
     
     train_df["image_path"] = train_df.image_path.apply(
-        lambda path: path.replace("/media/Data-10T-1/Data",
-                                  SHARED_SCRATCH_DIR) #.replace("-train/", "-train-500/")
+        lambda path: os.path.join(SHARED_SCRATCH_DIR, path).replace("-train/", "-train-500/")
     )
 
     valid_df["image_path"] = valid_df.image_path.apply(
-        lambda path: path.replace("/media/Data-10T-1/Data", 
-                                  SHARED_SCRATCH_DIR).replace("-val/", "-val-500/")
+        lambda path: os.path.join(SHARED_SCRATCH_DIR, path).replace("-val", "-val-500/")
     )
     
     test_df["image_path"] = test_df.image_path.apply(
-        lambda path: path.replace("/media/Data-10T-1/Data", 
-                                  SHARED_SCRATCH_DIR).replace("-test/", "-test-500/")
+        lambda path: os.path.join(SHARED_SCRATCH_DIR, path).replace("-test/", "-test-500/")
     )
 
     return train_df, valid_df, test_df
