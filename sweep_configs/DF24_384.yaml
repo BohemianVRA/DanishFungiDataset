@@ -6,7 +6,8 @@ program: danish_fungi_train.py
 method: grid
 parameters:
     architecture:
-        values: ['tf_efficientnet_b0.ap_in1k',  "tf_efficientnet_b3.ap_in1k", 'legacy_seresnext101_32x4d.in1k', 'vit_base_patch16_384', 'vit_large_patch16_384']
+        values: ['tf_efficientnet_b0.ap_in1k',  "tf_efficientnet_b3.ap_in1k",
+                 'legacy_seresnext101_32x4d.in1k', 'vit_base_patch16_384', 'vit_large_patch16_384']
 
 command:
   - ${env}
@@ -15,7 +16,7 @@ command:
   - "--config-path"
   - "../config/DF24_384_config.yaml"
   - "--wandb-entity"
-  - "zcu_cv"
+  - ${entity}
   - "--wandb-project"
-  - "DanishFungi2024"
+  - ${project}
   - ${args}
