@@ -20,5 +20,5 @@ accumulation_steps: 1
 random_seed: 777
 workers: 12
 multigpu: False
-tags: ["DF24_FIX", "384x384", "Production"]  # W&B Run tags
+tags: ["DanishFungi2024", "384x384", "Production"]  # W&B Run tags
 root_path: "../"

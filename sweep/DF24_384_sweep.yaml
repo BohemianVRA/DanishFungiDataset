@@ -1,7 +1,7 @@
-name: DanishFungi2024 Production 384x384
-project: DanishFungi2023
+name: DanishFungi2024 -- 384x384
+project: DanishFungi2024
 entity: zcu_cv
-description: 384x384 Image size sweep.
+description: Architecture sweep with an image size of 384x384 on DF24.
 program: danish_fungi_train.py
 method: grid
 parameters:
@@ -13,7 +13,7 @@ command:
   - ${interpreter}
   - ${program}
   - "--config-path"
-  - "../config/DF24M_384_config.yaml"
+  - "../config/DF24_384_config.yaml"
   - "--wandb-entity"
   - "zcu_cv"
   - "--wandb-project"

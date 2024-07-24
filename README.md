@@ -2,14 +2,13 @@
 
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/danish-fungi-2020-not-just-another-image/image-classification-on-df20-mini)](https://paperswithcode.com/sota/image-classification-on-df20-mini?p=danish-fungi-2020-not-just-another-image)
 
+# Danish Fungi 2020 - Not Just Another Image Recognition Dataset
+
 # News
-- Updated dataset with ObservationIDs from 2023
-- New train/test splits for DF24M and DF24 with images grouped based on the same ObservationID - No more images of the
-  same observation both in the train and test split simultaneously.
+- The Dataset got a new train/test split based on ObservationIDs. Images from the same observation will not occur in the test set. Interestingly there is just a small performance drop.
 - Updated baseline performance. All models are retrained and the results are updated with new scores.
 - Model checkpoints are newly available at [Hugging Face Hub Repository](https://huggingface.co/BVRA).
 
-# Danish Fungi 2020 - Not Just Another Image Recognition Dataset
 
 By [Lukas Picek](https://sites.google.com/view/picekl) et al. 
 [MAIL](mailto:lukaspicek@gmail.com?subject=[GitHub]%20DanishFungi2020%20Project)

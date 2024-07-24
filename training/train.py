@@ -11,11 +11,11 @@ from fgvc.datasets import get_dataloaders
 from fgvc.losses import FocalLossWithLogits, SeesawLossWithLogits
 from fgvc.utils.experiment import (get_optimizer_and_scheduler, load_args,
                                    load_config, load_model,
-                                   load_train_metadata, save_config)
+                                   save_config)
 from fgvc.utils.utils import set_cuda_device, set_random_seed
 from fgvc.utils.wandb import (finish_wandb, init_wandb, resume_wandb,
                               set_best_scores_in_summary)
-from hfhub import export_model_to_huggingface_hub_from_checkpoint
+from utils.hfhub import export_model_to_huggingface_hub_from_checkpoint
 from scipy.special import softmax
 from torch.utils.data import DataLoader
 
