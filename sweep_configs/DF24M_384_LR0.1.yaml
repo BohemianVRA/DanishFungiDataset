@@ -1,0 +1,23 @@
+name: DanishFungi2024 Mini - 384x384
+project: DanishFungi2024
+entity: zcu_cv
+description: 384x384 Image size sweep.
+program: danish_fungi_train.py
+method: grid
+parameters:
+    architecture:
+        values: [
+        'resnet50.a1_in1k',
+        'resnext50_32x4d.a1_in1k',
+        'beit_base_patch16_384.in22k_ft_in22k_in1k']
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - "--config-path"
+  - "../configs/DF24m_384_config-lr0.1.yaml"
+  - "--wandb-entity"
+  - "zcu_cv"
+  - "--wandb-project"
+  - "DanishFungi2024"
+  - ${args}

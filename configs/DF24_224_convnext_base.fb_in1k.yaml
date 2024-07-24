@@ -1,0 +1,24 @@
+# data
+augmentations: 'vit_heavy'
+image_size: [224, 224]  # [height, width]
+dataset: 'DF24'
+
+# model
+architecture: 'convnext_base.fb_in1k'
+
+# training
+train:
+loss: 'SeeSawLoss'
+optimizer: 'SGD'
+scheduler: 'plateau'
+epochs: 50
+learning_rate: 0.01
+batch_size: 32
+accumulation_steps: 8
+
+# other
+random_seed: 777
+workers: 8
+multigpu: False
+tags: ["DanishFungi2024", "224x224", "Convolutional"]  # W&B Run tags
+root_path: "../"
