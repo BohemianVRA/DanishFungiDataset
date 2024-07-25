@@ -113,7 +113,9 @@ class DanishFungiDataset(Dataset):
         return image, label, file_path, selected_feature_values
 
 
-def get_transforms(model_mean: list[float], model_std: list[float], image_size: tuple[int, int]) -> Compose:
+def get_transforms(
+    model_mean: list[float], model_std: list[float], image_size: tuple[int, int]
+) -> Compose:
     """
     Get the transformations to be applied to the images.
 
@@ -132,9 +134,5 @@ def get_transforms(model_mean: list[float], model_std: list[float], image_size: 
         Composition of transformations.
     """
     return Compose(
-        [
-            Resize(*image_size),
-            Normalize(mean=model_mean, std=model_std),
-            ToTensorV2()
-        ]
+        [Resize(*image_size), Normalize(mean=model_mean, std=model_std), ToTensorV2()]
     )

@@ -1,6 +1,7 @@
+from typing import Set
+
 import pandas as pd
 import wandb
-from typing import Set
 
 
 def get_results_df(tags: Set[str]) -> pd.DataFrame:
@@ -64,7 +65,9 @@ def main():
     results_df = results_df.sort_values(["Val. Accuracy", "Val. Recall@3", "Val. F1"])
     results_df.sort_index(inplace=True)
 
-    result_message = f"\n{dataset_tag}-{resolution_tag}: Production\n{results_df.to_markdown()}\n"
+    result_message = (
+        f"\n{dataset_tag}-{resolution_tag}: Production\n{results_df.to_markdown()}\n"
+    )
     print(result_message)
 
     with open(output_path, "a") as f:

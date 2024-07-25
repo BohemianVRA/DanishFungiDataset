@@ -1,21 +1,23 @@
 import itertools
+
 import numpy as np
 import pandas as pd
 import torch
 import tqdm
-from DanishFungiDataset import DanishFungiDataset
 from scipy.special import softmax
 from sklearn.metrics import accuracy_score, f1_score, top_k_accuracy_score
 from torch.utils.data import DataLoader
 
+from DanishFungiDataset import DanishFungiDataset
+
 
 def late_metadata_fusion(
-        df: pd.DataFrame,
-        model,
-        dataloader: DataLoader,
-        device: torch.device,
-        target_feature: str,
-        selected_features: list[str],
+    df: pd.DataFrame,
+    model,
+    dataloader: DataLoader,
+    device: torch.device,
+    target_feature: str,
+    selected_features: list[str],
 ) -> dict[str, dict]:
     """
     Fusing model predictions with species | metadata priors.
@@ -48,9 +50,12 @@ def late_metadata_fusion(
     }
     target_distribution = df[target_feature].value_counts(normalize=True)
 
-    predictions, predictions_raw, ground_truth_labels, ground_truth_features = predict_with_features(
-        model, dataloader, device
-    )
+    (
+        predictions,
+        predictions_raw,
+        ground_truth_labels,
+        ground_truth_features,
+    ) = predict_with_features(model, dataloader, device)
 
     feature_prior_ratios = {}
     weighted_predictions_complete = {}
@@ -58,7 +63,11 @@ def late_metadata_fusion(
         metadata_distribution = metadata_distributions[feature]
         seen_feature_values = ground_truth_features[feature]
 
-        weighted_predictions, weighted_predictions_raw, feature_prior_ratio = weight_predictions_by_feature_distribution(
+        (
+            weighted_predictions,
+            weighted_predictions_raw,
+            feature_prior_ratio,
+        ) = weight_predictions_by_feature_distribution(
             target_to_feature_conditional_distributions=metadata_distribution,
             target_distribution=target_distribution,
             ground_truth_labels=ground_truth_labels,
@@ -71,19 +80,24 @@ def late_metadata_fusion(
         }
         feature_prior_ratios[feature] = feature_prior_ratio
 
-    merged_predictions = post_process_prior_combinations(predictions_raw, feature_prior_ratios)
+    merged_predictions = post_process_prior_combinations(
+        predictions_raw, feature_prior_ratios
+    )
     weighted_predictions_complete.update(merged_predictions)
 
     for combination, _weighted_predictions in weighted_predictions_complete.items():
         _predictions = _weighted_predictions["predictions"]
         _predictions_raw = _weighted_predictions["predictions_raw"]
-        print(combination, get_metrics(ground_truth_labels, _predictions, _predictions_raw))
+        print(
+            combination,
+            get_metrics(ground_truth_labels, _predictions, _predictions_raw),
+        )
 
     return weighted_predictions_complete
 
 
 def get_target_to_feature_conditional_distributions(
-        df: pd.DataFrame, feature: str, target_feature: str, add_to_missing: bool = True
+    df: pd.DataFrame, feature: str, target_feature: str, add_to_missing: bool = True
 ) -> pd.Series:
     """
     Returns the target conditional distributions per feature category.
@@ -104,8 +118,12 @@ def get_target_to_feature_conditional_distributions(
     pd.Series
         Series of target conditional distributions per feature category.
     """
-    feature_per_target_counts = df.groupby([feature, target_feature])[feature].count().unstack(
-        fill_value=0).stack()
+    feature_per_target_counts = (
+        df.groupby([feature, target_feature])[feature]
+        .count()
+        .unstack(fill_value=0)
+        .stack()
+    )
     if add_to_missing:
         feature_per_target_counts += 1
 
@@ -116,16 +134,17 @@ def get_target_to_feature_conditional_distributions(
         feature_per_target_counts[zeroed_feature] += 1
 
     distributions = feature_per_target_counts / per_feature_counts
-    assert all(abs(distributions.groupby(level=0).sum() - 1) < 1e-6), \
-        f"Target distributions do not sum to 1 per feature category of {feature}"
+    assert all(
+        abs(distributions.groupby(level=0).sum() - 1) < 1e-6
+    ), f"Target distributions do not sum to 1 per feature category of {feature}"
 
     return distributions
 
 
 def predict_with_features(
-        model,
-        loader: DataLoader,
-        device: torch.device,
+    model,
+    loader: DataLoader,
+    device: torch.device,
 ) -> tuple[list, list, list, dict]:
     """
     Makes predictions using the model on the DataLoader, which must contain ExtraFeaturesDataset.
@@ -144,8 +163,9 @@ def predict_with_features(
     tuple of (list, list, list, dict)
         Predictions, raw predictions, ground truth labels, and extra feature values.
     """
-    assert isinstance(loader.dataset, DanishFungiDataset), \
-        "Dataset in loader must be of type ExtraFeaturesDataset"
+    assert isinstance(
+        loader.dataset, DanishFungiDataset
+    ), "Dataset in loader must be of type ExtraFeaturesDataset"
 
     extra_features = loader.dataset.get_extra_features_names()
     batch_size = loader.batch_size
@@ -155,7 +175,9 @@ def predict_with_features(
     predictions_raw = []
     ground_truth_features = {feature: [] for feature in extra_features}
 
-    for i, (images, labels, _, features) in enumerate(tqdm.tqdm(loader, total=len(loader))):
+    for i, (images, labels, _, features) in enumerate(
+        tqdm.tqdm(loader, total=len(loader))
+    ):
         images, labels = images.to(device), labels.to(device)
 
         with torch.no_grad():
@@ -170,15 +192,20 @@ def predict_with_features(
         for extra_feature in extra_features:
             ground_truth_features[extra_feature].extend(features[extra_feature])
 
-    return predictions.tolist(), predictions_raw, ground_truth_labels, ground_truth_features
+    return (
+        predictions.tolist(),
+        predictions_raw,
+        ground_truth_labels,
+        ground_truth_features,
+    )
 
 
 def weight_predictions_by_feature_distribution(
-        target_to_feature_conditional_distributions: pd.Series,
-        target_distribution: pd.Series,
-        ground_truth_labels: list,
-        raw_predictions: list,
-        ground_truth_feature_categories: list,
+    target_to_feature_conditional_distributions: pd.Series,
+    target_distribution: pd.Series,
+    ground_truth_labels: list,
+    raw_predictions: list,
+    ground_truth_feature_categories: list,
 ) -> tuple[list, list, list]:
     """
     Weights predictions by feature distribution.
@@ -206,12 +233,13 @@ def weight_predictions_by_feature_distribution(
     feature_prior_ratios = []
 
     for lbl, raw_prediction, feature_category in tqdm.tqdm(
-            zip(ground_truth_labels, raw_predictions, ground_truth_feature_categories),
-            total=len(ground_truth_labels),
+        zip(ground_truth_labels, raw_predictions, ground_truth_feature_categories),
+        total=len(ground_truth_labels),
     ):
         predictions = softmax(raw_prediction)
         feature_conditional_distribution = target_to_feature_conditional_distributions[
-            int(feature_category)]
+            int(feature_category)
+        ]
         p_feature = (predictions * feature_conditional_distribution) / (
             sum(predictions * feature_conditional_distribution)
         )
@@ -227,8 +255,8 @@ def weight_predictions_by_feature_distribution(
 
 
 def post_process_prior_combinations(
-        raw_predictions: list,
-        feature_prior_ratios: dict,
+    raw_predictions: list,
+    feature_prior_ratios: dict,
 ) -> dict:
     """
     Post-processes predictions by combining feature prior ratios.
@@ -250,7 +278,9 @@ def post_process_prior_combinations(
 
     for num_features in range(2, len(features) + 1):
         for combination in itertools.combinations(features, num_features):
-            selected_prior_ratios = [feature_prior_ratios[feature] for feature in combination]
+            selected_prior_ratios = [
+                feature_prior_ratios[feature] for feature in combination
+            ]
             merged_preds, merged_preds_raw = weight_predictions_combined_feature_priors(
                 raw_predictions, selected_prior_ratios
             )
@@ -263,7 +293,7 @@ def post_process_prior_combinations(
 
 
 def weight_predictions_combined_feature_priors(
-        raw_predictions: list, feature_prior_ratios: list
+    raw_predictions: list, feature_prior_ratios: list
 ) -> tuple[list, list]:
     """
     Weights predictions by combining feature prior ratios.
@@ -298,9 +328,9 @@ def weight_predictions_combined_feature_priors(
 
 
 def get_metrics(
-        ground_truth_labels: list,
-        predictions: list,
-        predictions_raw: list,
+    ground_truth_labels: list,
+    predictions: list,
+    predictions_raw: list,
 ) -> tuple[float, float, float]:
     """
     Computes evaluation metrics.

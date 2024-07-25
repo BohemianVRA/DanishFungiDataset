@@ -1,10 +1,9 @@
 import logging
 import os
 from typing import Tuple
-from PIL import Image
 
-import pandas as pd
 import numpy as np
+import pandas as pd
 import torch
 import torch.nn as nn
 import wandb
@@ -12,50 +11,21 @@ from fgvc.core.training import predict, train
 from fgvc.datasets import get_dataloaders
 from fgvc.losses import FocalLossWithLogits, SeesawLossWithLogits
 from fgvc.utils.experiment import (get_optimizer_and_scheduler, load_args,
-                                   load_config, load_model,
-                                   save_config)
+                                   load_config, load_model, save_config,
+                                   load_train_metadata)
 from fgvc.utils.utils import set_cuda_device, set_random_seed
 from fgvc.utils.wandb import (finish_wandb, init_wandb, resume_wandb,
                               set_best_scores_in_summary)
-from utils.hfhub import export_model_to_huggingface_hub_from_checkpoint
+from PIL import Image, ImageFile
 from scipy.special import softmax
 from torch.utils.data import DataLoader
+from utils.hfhub import export_model_to_huggingface_hub_from_checkpoint
 
-from PIL import ImageFile
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 logger = logging.getLogger("script")
 
-SCRATCH_DIR = os.getenv("SCRATCHDIR", "/media/Data-10T-1/Data/")
-SHARED_SCRATCH_DIR = "/local/nahouby/Datasets/DanishFungi2024/DF24m"
-# API_BASE_PATH = "http://147.228.47.72:12080/files/"
-
-
-def load_metadata(config: dict) -> Tuple[pd.DataFrame, pd.DataFrame]:
-    """Load metadata of the traning and validation sets."""
-    assert "dataset" in config
-        
-    train_df = pd.read_csv("../metadata/DanishFungi2024m-train-metadata-DEV.csv")
-
-    valid_df = pd.read_csv("../metadata/DanishFungi2024m-val-metadata-DEV.csv")
-    valid_df = valid_df[valid_df.class_id != -1].reset_index(drop=True)
-    
-    test_df = pd.read_csv("../metadata/DanishFungi2024m-test-metadata-DEV.csv")
-    test_df = test_df[test_df.class_id != -1].reset_index(drop=True)
-    
-    train_df["image_path"] = train_df.image_path.apply(
-        lambda path: os.path.join(SHARED_SCRATCH_DIR, path).replace("-train/", "-train-500/")
-    )
-
-    valid_df["image_path"] = valid_df.image_path.apply(
-        lambda path: os.path.join(SHARED_SCRATCH_DIR, path).replace("-val", "-val-500/")
-    )
-    
-    test_df["image_path"] = test_df.image_path.apply(
-        lambda path: os.path.join(SHARED_SCRATCH_DIR, path).replace("-test/", "-test-500/")
-    )
-
-    return train_df, valid_df, test_df
+SCRATCH_DIR = os.getenv("SCRATCHDIR", "./")
 
 
 def evaluate(
@@ -64,6 +34,7 @@ def evaluate(
     testloader: DataLoader,
     path: str,
     device: torch.device = "cpu",
+    log_images: bool = False,
 ):
     """Evaluate model and create example visualizations.
 
@@ -77,10 +48,12 @@ def evaluate(
         Directory to store example visualizations.
     device
         Cuda or CPU device.
+    log_images
+        Whether to store
     """
     if wandb.run is None:
         return
-    
+
         # evaluate model
     logger.info("Creating predictions.")
     preds, targs, _, scores = predict(model, testloader, device=device)
@@ -94,11 +67,18 @@ def evaluate(
     id2class = dict(zip(train_df["class_id"], train_df["species"]))
 
     pred_df = pd.DataFrame()
-    # pred_df["image"] = test_df["image_path"].apply(lambda x: wandb.Image(data_or_path=Image.open(x)))
-    
-    top5_indices = np.argsort(-softmax_values, axis=1)[:, :5]  # Get indices of top 5 softmax values
+    if log_images:
+        pred_df["image"] = test_df["image_path"].apply(
+            lambda image_path: wandb.Image(data_or_path=Image.open(image_path))
+        )
+
+    top5_indices = np.argsort(-softmax_values, axis=1)[
+        :, :5
+    ]  # Get indices of top 5 softmax values
     top5_species = [str([id2class[i] for i in row]) for row in top5_indices]
-    top5_softmax = [str(softmax_values[i][top5_indices[i]]) for i in range(len(top5_indices))]
+    top5_softmax = [
+        str(softmax_values[i][top5_indices[i]]) for i in range(len(top5_indices))
+    ]
 
     # Create new columns in pred_df for top 5 predictions and softmax values
     pred_df["top5-species"] = top5_species
@@ -111,10 +91,14 @@ def evaluate(
     for col in ["image_path"]:
         pred_df[col] = test_df[col]
     wandb.log({"pred_table": wandb.Table(dataframe=pred_df)})
-    
-    wandb.log({"test/F1": scores["F1"],
-               "test/Accuracy": scores["Accuracy"],
-               "test/Recall@3": scores["Recall@3"]})
+
+    wandb.log(
+        {
+            "test/F1": scores["F1"],
+            "test/Accuracy": scores["Accuracy"],
+            "test/Recall@3": scores["Recall@3"],
+        }
+    )
 
 
 def add_metadata_info_to_config(
@@ -147,13 +131,12 @@ def train_clf(
         cuda_devices = args.cuda_devices
         wandb_entity = args.wandb_entity
         wandb_project = args.wandb_project
-        resume_exp_name = args.resume_exp_name
+        save_to_hfhub = args.save_to_hfhub
     else:
         extra_args = kwargs
 
-        
     ImageFile.LOAD_TRUNCATED_IMAGES = True
-    
+
     # load training config
     logger.info("Loading training config.")
     config = load_config(
@@ -169,7 +152,7 @@ def train_clf(
 
     # load metadata
     logger.info("Loading training and validation metadata.")
-    train_df, valid_df, test_df = load_metadata(config)
+    train_df, valid_df, test_df = load_train_metadata(config)
     config = add_metadata_info_to_config(config, train_df, valid_df)
 
     # load model and create optimizer and lr scheduler
@@ -224,9 +207,9 @@ def train_clf(
 
     # train model
     logger.info("Training the model.")
-    
+
     ImageFile.LOAD_TRUNCATED_IMAGES = True
-    
+
     train(
         model=model,
         trainloader=trainloader,
@@ -254,7 +237,7 @@ def train_clf(
     # evaluate model
     model_filename = os.path.join(config["exp_path"] + "/best_f1.pth")
     model.load_state_dict(torch.load(model_filename, map_location="cpu"))
-        
+
     _, test_loader, _, _ = get_dataloaders(
         None,
         test_df,
@@ -265,7 +248,7 @@ def train_clf(
         batch_size=config["batch_size"],
         num_workers=config["workers"],
     )
-        
+
     evaluate(model, trainloader, test_loader, path=config["exp_path"], device=device)
 
     # finish wandb run
@@ -277,22 +260,21 @@ def train_clf(
             primary_score="val/F1",
             scores=lambda df: [col for col in df if col.startswith("val/")],
         )
-        
-    def count_parameters(model):
-        return sum(p.numel() for p in model.parameters() if p.requires_grad)
 
-    # Count the number of parameters
-    num_params = count_parameters(model)
-        
-    try:
-        config["mean"] = model_mean
-        config["std"] = model_std
-        config["params"] = np.round(num_params / 1000000, 1)
-        export_model_to_huggingface_hub_from_checkpoint(
-            config=config, repo_owner="BVRA", saved_model="f1"
-        )
-    except Exception as e:
-        print(f"Exception during export: {e}")
+    def count_parameters(trained_model):
+        return sum(p.numel() for p in trained_model.parameters() if p.requires_grad)
+
+    if save_to_hfhub:
+        try:
+            num_params = count_parameters(model)
+            config["mean"] = model_mean
+            config["std"] = model_std
+            config["params"] = np.round(num_params / 1000000, 1)
+            export_model_to_huggingface_hub_from_checkpoint(
+                config=config, repo_owner=args.hfhub_owner, saved_model="f1"
+            )
+        except Exception as e:
+            print(f"Exception during export: {e}")
 
 
 if __name__ == "__main__":

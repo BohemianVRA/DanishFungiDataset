@@ -12,7 +12,10 @@ import yaml
 
 try:
     import huggingface_hub
-    assert hasattr(huggingface_hub, "__version__")  # verify package import not local dir
+
+    assert hasattr(
+        huggingface_hub, "__version__"
+    )  # verify package import not local dir
     HuggingFaceAPI = huggingface_hub.HfApi
     HFHubCreateRepo = huggingface_hub.create_repo
 except (ImportError, AssertionError):
@@ -68,11 +71,11 @@ def remove_suffix(input_string, suffix):
 
 @is_hfhub_installed
 def export_model_to_huggingface_hub_from_checkpoint(
-        *,
-        config: dict = None,
-        repo_owner: str = None,
-        saved_model: str = None,
-        model_card: str = None,
+    *,
+    config: dict = None,
+    repo_owner: str = None,
+    saved_model: str = None,
+    model_card: str = None,
 ) -> str:
     """
     Exports a saved model to the HuggingFace Hub.
@@ -119,7 +122,9 @@ def export_model_to_huggingface_hub_from_checkpoint(
 
     fgvc_config_path = osp.join(exp_path, "config.yaml")
     if len(config) == 1:  # Try to load config if only the exp_path is given
-        assert osp.exists(fgvc_config_path), f"Config path {fgvc_config_path} does not exist."
+        assert osp.exists(
+            fgvc_config_path
+        ), f"Config path {fgvc_config_path} does not exist."
         with open(fgvc_config_path, "r") as fp:
             config_data = yaml.safe_load(fp)
             config.update(config_data)
@@ -218,7 +223,9 @@ def _create_model_repo_name(repo_owner: str, config: dict) -> str:
     architecture_split = architecture.split(".")
     if len(architecture_split) > 1:
         specification = architecture_split[1].split("_")[-1]
-        definition = f"{architecture_split[0]}.{specification}_ft_{dataset}_{image_size}"
+        definition = (
+            f"{architecture_split[0]}.{specification}_ft_{dataset}_{image_size}"
+        )
     else:
         definition = f"{architecture_split[0]}.ft_{dataset}_{image_size}"
     repo_name = f"{repo_owner}/{definition}"
@@ -363,11 +370,11 @@ def hfhub_load_args() -> tuple[argparse.Namespace, list[str]]:
 
 
 def export_to_hfhub(
-        *,
-        exp_path: str = None,
-        repo_owner: str = None,
-        saved_model: str = None,
-        model_card: str = None,
+    *,
+    exp_path: str = None,
+    repo_owner: str = None,
+    saved_model: str = None,
+    model_card: str = None,
 ) -> str:
     """
     Wraps the export_model_to_huggingface_hub_from_checkpoint() with a CLI interface.
