@@ -30,12 +30,13 @@ settings on the classification performance.
 - Model checkpoints are newly available at [Hugging Face Hub Repository](https://huggingface.co/BVRA).
 
 ## Data
-| Subset                   | Images (full-size)                                                                        | Images <br/>(max side size 300px)                                                       | Metadata                                                                 |
-|--------------------------|-------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------|--------------------------------------------------------------------------|
+| Subset                   | Images (full-size)                                                                        | Images <br/>(max side size 300px)                                                       | Metadata                                                           |
+|--------------------------|-------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------|--------------------------------------------------------------------|
 | Danish Fungi 2020        | [LINK [~110GB]](http://ptak.felk.cvut.cz/plants/DanishFungiDataset/DF20-train_val.tar.gz) | [LINK [~6.5GB]](http://ptak.felk.cvut.cz/plants/DanishFungiDataset/DF20-train_val.tar.gz) | [LINK](http://ptak.felk.cvut.cz/plants/DanishFungiDataset/DF20-metadata.zip) |
 | Danish Fungi 2020 – Mini | [LINK [~12.5GB]](http://ptak.felk.cvut.cz/plants/DanishFungiDataset/DF20M-images.tar.gz)  | ---                                                                                     | [LINK](http://ptak.felk.cvut.cz/plants/DanishFungiDataset/DF20M-metadata.zip) |
-| Danish Fungi 2024        | ❗Same as for DF20❗                                                                        | ❗Same as for DF20❗                                                                      | TBD                                                              |
-| Danish Fungi 2024 – Mini | ❗Same as for DF20 – Mini❗                                                                 | ---                                                                                     |    TBD                                                           |
+| Danish Fungi 2024        | ❗Same as for DF20❗                                                                        | ❗Same as for DF20❗                                                                      | [LINK](http://ptak.felk.cvut.cz/plants/DanishFungiDataset/DanishFungi2024.zip)                                                           |
+| Danish Fungi 2024 – Mini | ❗Same as for DF20 – Mini❗                                                                 | ---                                                                                     |    [LINK](http://ptak.felk.cvut.cz/plants/DanishFungiDataset/DanishFungi2024-Mini.zip)                                                   |
+
 
 To download the dataset files in CMD, use:
 ```

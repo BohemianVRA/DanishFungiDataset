@@ -8,7 +8,7 @@ from scipy.special import softmax
 from sklearn.metrics import accuracy_score, f1_score, top_k_accuracy_score
 from torch.utils.data import DataLoader
 
-from DanishFungiDataset import DanishFungiDataset
+from .DanishFungiDataset import DanishFungiDataset
 
 
 def late_metadata_fusion(
@@ -89,7 +89,6 @@ def late_metadata_fusion(
         _predictions = _weighted_predictions["predictions"]
         _predictions_raw = _weighted_predictions["predictions_raw"]
         print(
-            combination,
             get_metrics(ground_truth_labels, _predictions, _predictions_raw),
         )
 
@@ -353,3 +352,4 @@ def get_metrics(
     accuracy = accuracy_score(ground_truth_labels, predictions)
     recall_3 = top_k_accuracy_score(ground_truth_labels, predictions_raw, k=3)
     return f1, accuracy, recall_3
+
