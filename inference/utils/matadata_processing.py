@@ -270,7 +270,8 @@ def post_process_prior_combinations(
     Returns
     -------
     dict
-        Dictionary containing merged predictions and raw predictions for each combination of features.
+        Dictionary containing merged predictions and raw predictions for each combination of
+        features.
     """
     features = list(feature_prior_ratios.keys())
     merged_predictions = {}
@@ -352,4 +353,3 @@ def get_metrics(
     accuracy = accuracy_score(ground_truth_labels, predictions)
     recall_3 = top_k_accuracy_score(ground_truth_labels, predictions_raw, k=3)
     return f1, accuracy, recall_3
-

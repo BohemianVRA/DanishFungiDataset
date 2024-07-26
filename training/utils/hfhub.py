@@ -355,7 +355,7 @@ def hfhub_load_args() -> tuple[argparse.Namespace, list[str]]:
     )
     parser.add_argument(
         "--saved-model",
-        help="Specify to select a specific model to export (accuracy, f1, loss, recall, last_epoch).",
+        help="Specify a model to export (accuracy, f1, loss, recall, last_epoch).",
         type=str,
         required=False,
     )
@@ -387,9 +387,9 @@ def export_to_hfhub(
     exp_path : str, optional
         Path to the experiment directory. If not provided, it will be taken from CLI arguments.
     repo_owner : str, optional
-        Name of the HuggingFace repository owner. If not provided, it will be taken from CLI arguments.
+        Name of the HuggingFace repository owner. If not provided, it will be taken from CLI args.
     saved_model : str, optional
-        Key to select the saved model to export. If not provided, it will be taken from CLI arguments.
+        Key to select the saved model to export. If not provided, it will be taken from CLI args.
     model_card : str, optional
         Contents of the model card file. If not provided, it will be taken from CLI arguments.
 
