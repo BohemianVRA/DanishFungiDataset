@@ -18,6 +18,7 @@ def late_metadata_fusion(
     device: torch.device,
     target_feature: str,
     selected_features: list[str],
+    observation_feature_name: str | None = None,
 ) -> dict[str, dict]:
     """
     Fusing model predictions with species | metadata priors.
@@ -36,6 +37,8 @@ def late_metadata_fusion(
         Column name for target labels in the DataFrame.
     selected_features : list of str
         List of feature column names to use for weighting predictions.
+    observation_feature_name: str | None
+        Name of the observation feature, if present used for raw prediction averaging.
 
     Returns
     -------
@@ -57,12 +60,21 @@ def late_metadata_fusion(
         ground_truth_features,
     ) = predict_with_features(model, dataloader, device)
 
+    if observation_feature_name is not None:
+        predictions_raw = prediction_averaging_by_same_observation(
+            observation_feature_name=observation_feature_name,
+            ground_truth_features=ground_truth_features,
+            predictions_raw=predictions_raw,
+            num_classes=len(df[target_feature].unique()),
+        )
+
     feature_prior_ratios = {}
     weighted_predictions_complete = {}
     for feature in selected_features:
         metadata_distribution = metadata_distributions[feature]
         seen_feature_values = ground_truth_features[feature]
 
+        print(f"Weighting predictions by: {feature}")
         (
             weighted_predictions,
             weighted_predictions_raw,
@@ -88,9 +100,11 @@ def late_metadata_fusion(
     for combination, _weighted_predictions in weighted_predictions_complete.items():
         _predictions = _weighted_predictions["predictions"]
         _predictions_raw = _weighted_predictions["predictions_raw"]
-        print(
-            get_metrics(ground_truth_labels, _predictions, _predictions_raw),
+        f1, accuracy, recall_3 = get_metrics(
+            ground_truth_labels, _predictions, _predictions_raw
         )
+        print(combination)
+        print(f"f1: {f1}, accuracy: {accuracy}, recall3: {recall_3}")
 
     return weighted_predictions_complete
 
@@ -164,7 +178,7 @@ def predict_with_features(
     """
     assert isinstance(
         loader.dataset, DanishFungiDataset
-    ), "Dataset in loader must be of type ExtraFeaturesDataset"
+    ), "Dataset in the loader must be of the type DanishFungiDataset."
 
     extra_features = loader.dataset.get_extra_features_names()
     batch_size = loader.batch_size
@@ -197,6 +211,48 @@ def predict_with_features(
         ground_truth_labels,
         ground_truth_features,
     )
+
+
+def prediction_averaging_by_same_observation(
+    observation_feature_name: str,
+    ground_truth_features: dict,
+    predictions_raw: list,
+    num_classes: int,
+) -> list:
+    """Groups predictions of the same observation by averaging.
+
+    Parameters
+    ----------
+    observation_feature_name: str
+    ground_truth_features: dict
+    predictions_raw: list
+    num_classes: int
+        Number of classes in the target feature.
+
+    Returns
+    -------
+    list
+        New raw predictions averaged by the same observation id.
+    """
+    seen_observation_ids = np.array(ground_truth_features[observation_feature_name])
+    unique_observation_ids = np.unique(seen_observation_ids)
+
+    preds_raw_np = np.array(predictions_raw)
+
+    obs_preds_raw = np.zeros((len(predictions_raw), num_classes))
+    obs_preds = np.zeros((len(predictions_raw)))
+
+    for unique_observation_id in unique_observation_ids:
+        same_observation_indexes = np.where(
+            seen_observation_ids == unique_observation_id
+        )
+
+        observation_predictions = preds_raw_np[same_observation_indexes]
+        _obs_preds = np.average(observation_predictions, axis=0)
+        obs_preds_raw[same_observation_indexes] = _obs_preds
+        obs_preds[same_observation_indexes] = _obs_preds.argmax()
+
+    return obs_preds_raw.tolist()
 
 
 def weight_predictions_by_feature_distribution(
@@ -284,7 +340,7 @@ def post_process_prior_combinations(
             merged_preds, merged_preds_raw = weight_predictions_combined_feature_priors(
                 raw_predictions, selected_prior_ratios
             )
-            merged_predictions["+ ".join(combination)] = {
+            merged_predictions[" + ".join(combination)] = {
                 "predictions": merged_preds,
                 "predictions_raw": merged_preds_raw,
             }
