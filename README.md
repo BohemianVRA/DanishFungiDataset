@@ -1,119 +1,207 @@
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/danish-fungi-2020-not-just-another-image/image-classification-on-df20)](https://paperswithcode.com/sota/image-classification-on-df20?p=danish-fungi-2020-not-just-another-image)
+[![PWC](https://img.shields.io/badge/WACV-2022-blue)](https://wacv2022.thecvf.com/)
+[![PWC](https://img.shields.io/badge/Proceedings-CVF-red)](https://openaccess.thecvf.com/content/WACV2022/html/Picek_Danish_Fungi_2020_-_Not_Just_Another_Image_Recognition_Dataset_WACV_2022_paper.html)
+[![PWC](https://img.shields.io/badge/Pretrained--Models-HuggingFace-blue)](https://huggingface.co/collections/BVRA/danish-fungi-2020-66a2228d0f4902df59d549e8)
 
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/danish-fungi-2020-not-just-another-image/image-classification-on-df20-mini)](https://paperswithcode.com/sota/image-classification-on-df20-mini?p=danish-fungi-2020-not-just-another-image)
 
-# News
-- Metrics slightly updated! Retrained with PyTorch NGC Docker Container 20.07 and on Ampere GPUs only (3080 / 3090)
-- EXIF metadata available! You can read it dirrectly from the images.
-
-# Danish Fungi 2020 - Not Just Another Image Recognition Dataset
+# 🍄 Danish Fungi – Not Just Another Image Recognition Dataset
 
 By [Lukas Picek](https://sites.google.com/view/picekl) et al. 
 [MAIL](mailto:lukaspicek@gmail.com?subject=[GitHub]%20DanishFungi2020%20Project)
 
-## Introduction
+## Description
 
-Supplementary material to:
-Danish Fungi 2020 - Not Just Another Image Recognition Dataset 
+Danish Fungi 2020 (DF20) is a new dataset for fine-grained visual categorization. The dataset is 
+constructed from observations submitted to the Atlas of Danish Fungi and is unique in
+(i) its taxonomy-accurate labels with little to no label errors,
+(ii) highly unbalanced long-tailed class distribution,
+(iii) rich observation metadata about surrounding environment, location, time and device.
+DF20 has zero overlap with ImageNet, allowing unbiased comparison of models fine-tuned from publicly 
+available ImageNet checkpoints. The proposed evaluation protocol enables testing the ability to 
+improve classification using metadata – e.g. precise geographic location, habitat, and substrate,
+facilitates classifier calibration testing, and finally allows to study the impact of the device 
+settings on the classification performance.
 
-In order to support research in fine-grained plant classification and to allow full reproducibility of our results, we share the Training Logs and Trained scripts.
-- The Images, Checkpoints and Metadata are not included based on size constrains and will be published after the review.
+![Species Similarities and differences](figures/fungi_samples.png)
 
-## Training Data
+## News
+- **30.7. 20024**: We made a new train/test split based on ObservationIDs where data from the same observation do not occur in the test set. 
+- **30.7. 20024**: To distinguish it from the original split we call it **DanishFungi24**.
+- **30.7. 20024**: Updated baseline performance. All models are retrained and the results bellow updated (there is just a small drop in performance).
+- **30.7. 20024**: Model checkpoints are newly available at [Hugging Face Hub Repository](https://huggingface.co/collections/BVRA/danish-fungi-2020-66a2228d0f4902df59d549e8).
 
-Available at -> https://sites.google.com/view/danish-fungi-dataset
+## Data
+| Subset                   | Images (full-size)                                                                        | Images <br/>(max side size 300px)                                                       | Metadata                                                           |
+|--------------------------|-------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------|--------------------------------------------------------------------|
+| Danish Fungi 2020        | [LINK [~110GB]](http://ptak.felk.cvut.cz/plants/DanishFungiDataset/DF20-train_val.tar.gz) | [LINK [~6.5GB]](http://ptak.felk.cvut.cz/plants/DanishFungiDataset/DF20-train_val.tar.gz) | [LINK](http://ptak.felk.cvut.cz/plants/DanishFungiDataset/DF20-metadata.zip) |
+| Danish Fungi 2020 – Mini | [LINK [~12.5GB]](http://ptak.felk.cvut.cz/plants/DanishFungiDataset/DF20M-images.tar.gz)  | ---                                                                                     | [LINK](http://ptak.felk.cvut.cz/plants/DanishFungiDataset/DF20M-metadata.zip) |
+| Danish Fungi 2024        | ❗Same as for DF20❗                                                                        | ❗Same as for DF20❗                                                                      | [LINK](http://ptak.felk.cvut.cz/plants/DanishFungiDataset/DanishFungi2024.zip)                                                           |
+| Danish Fungi 2024 – Mini | ❗Same as for DF20 – Mini❗                                                                 | ---                                                                                     |    [LINK](http://ptak.felk.cvut.cz/plants/DanishFungiDataset/DanishFungi2024-Mini.zip)                                                   |
+
+
+To download the dataset files in CMD, use:
+```
+wget --no-check-certificate URL
+```
+
+In order to support research in fine-grained plant classification and to allow full reproducibility of our results, we share the training scripts and data tools.
+- Checkpoints are available at [Hugging Face Hub Repository](https://huggingface.co/collections/BVRA/danish-fungi-2020-66a2228d0f4902df59d549e8).
+- Train and Validation logs are available at [Weights & Biases Workspace](https://wandb.ai/zcu_cv/DanishFungi2024).
+
+
+
+## Installation
+Python 3.10+ is required.
+### Local instalation
+1. Install dependencies
+You can use any virtual or local environment. Just use the following commands in your terminal.
+```
+pip install -r requirements.txt
+```
+2. Login to [Weights & Biases](https://wandb.ai/site) to log results [*optional].
+```
+wandb login
+```
+3. Login to [Hugging Face Hub](https://huggingface.co/) to save and download model checkpoints [*optional].
+```
+huggingface-cli login
+```
 
 ## Training
-
-1. Download PyTorch NGC Docker Image and RUN docker container
-
-```
-docker pull nvcr.io/nvidia/pytorch:21.07-py3
-docker run --gpus all -it --rm -v local_dir:container_dir nvcr.io/nvidia/pytorch:21.07-py3
-```
-
-2. Install dependencies inside docker container
+For training navigate to `./training` folder.
+To run the training you can use the provided `train.ipynb` notebook or `train.py` CLI.
+In both you have to:
+* Specify valid paths, wandb settings, etc. in **train.ipynb** or local environment and run. In the notebook
+all variables that must be "set" have `"changethis"` as value.
 
 ```
-pip install pandas seaborn timm albumentation tqdm efficientnet_pytorch pretrainedmodels
+python train.py \
+    --train-path $TRAIN_METADATA_PATH \
+    --test-path $TEST_METADATA_PATH \
+    --config-path ../configs/DF24M_224_config.yaml \
+    --cuda-devices $CUDA_DEVICES \
+    --wandb-entity $WANDB_ENTITY [**optional**] \
+    --wandb-project $WANDB_PROJECT [**optional**] \
+    --hfhub-owner $HFHUB_OWNER [**optional**]
 ```
-3. RUN jupyterlab and start training / experiments
-```
-jupyter lab --ip 0.0.0.0 --port 8888 --allow-root
-```
-* Check your paths! 
+
+
+os.environ["CUDA_VISIBLE_DEVICES"] = os.environ["CUDA_DEVICES"]
+
+
+## Exploiting metadata with late-fusion
+To allow easy use of the available observation metadata (i.e., information about habitat, substrate etc.)
+we provide a notebook `./inference/metadata_fusion.ipynb` that uses the late metadata-fusion (described in the paper Section 5.2).
 
 ## Results
 
-### CNN Performance Evaluation
-Classification performance of selected CNN architectures on DF20 and DF20 - Mini. All networks share the settings described in Section 6.1 and were trained on 299×299 images.
+### CNN Performance Evaluation [**Updated**]
+Classification performance of selected CNN architectures on DF24 and DF24 - Mini.
+All networks share the settings described in the paper (Section 5.1) and were trained on 299×299 images.
 
-|  | Top1 [%] | Top3 [%] | F1 | Top1 [%] | Top3 [%] | F1 |
-| ---------------- | ---- | ---- | ---- | ---- | ---- | ---- |
-| MobileNet-V2         | 65.58 | 83.65 | 0.559 | 69.77 | 85.01 | 0.606 
-| ResNet-18            | 62.91 | 81.65 | 0.514 | 67.13 | 82.65 | 0.580
-| ResNet-34            | 65.63 | 83.52 | 0.559 | 69.81 | 84.76 | 0.600
-| ResNet-50            | 68.39 | 85.22 | 0.587 | 73.49 | 87.13 | 0.649
-| EfficientNet-B0      | 67.94 | 85.71 | 0.567 | 73.65 | 87.55 | 0.653
-| EfficientNet-B1      | 68.35 | 84.67 | 0.572 | 74.08 | 87.68 | 0.654
-| EfficientNet-B3      | 69.59 | 85.55 | 0.590 | 75.69 | 88.72 | 0.673
-| EfficientNet-B5      | 68.76 | 85.00 | 0.579 | 76.10 | 88.85 | 0.678
-| Inception-V3         | 65.91 | 82.97 | 0.535 | 72.10 | 86.58 | 0.630
-| InceptionResnet-V2   | 64.67 | 81.42 | 0.542 | 74.01 | 87.49 | 0.651
-| Inception-V4         | 67.45 | 82.78 | 0.560 | 73.00 | 86.87 | 0.637
-| SE-ResNeXt-101-32x4d | 72.23 | 87.28 | 0.620 | 77.13 | 89.48 | 0.693 
-| ---------------- | ---- | ---- | ---- | ---- | ---- | ---- |
-| Dataset | DF20M | DF20M | DF20M | DF20 | DF20 | DF20 | 
 
-### ViT x CNN Performance Evaluation
-Classification results of selected CNN and ViT architectures on DF20 and DF20\,-\,Mini dataset for two input resolutions [224𐄂224, 384𐄂384].
+|  | Top1 [%] | Top3 [%]          | F1 [%]   | Top1 [%] | Top3 [%] | F1 [%]   |
+| ---------------- |----------|-------------------|-------|------|-------|-------|
+| MobileNet-V2         | 60.58    | 78.90 | 48.59 | 66.12 | 82.17 | 55.21 |
+| ResNet-18            | 55.80    | 75.17 | 42.98 | 60.16 | 77.66 | 49.13 |
+| ResNet-34            | 56.80    | 77.17 | 43.21 | 63.54 | 80.30 | 52.88 |
+| ResNet-50            | 60.58    | 79.82 | 48.43 | 66.63 | 82.53 | 56.24 |
+| EfficientNet-B0      | 63.04    | 80.25 | 50.39 | 67.99 | 83.58 | 57.31 |
+| EfficientNet-B1      | 64.14    | 81.22 | 52.59 | 69.20 | 84.28 | 58.54 |
+| EfficientNet-B3      | 63.77    | 80.76 | 51.44 | 70.38 | 85.13 | 59.68 |
+| EfficientNet-B5      | 63.28    | 81.25 | 51.50 | 71.51 | 85.89 | 60.94 |
+| Inception-V3         | 60.79    | 79.06 | 47.88 | 68.49 | 83.74 | 57.76 |
+| InceptionResnet-V2   | 63.06    | 79.68 | 50.49 | 70.16 | 84.75 | 59.34 |
+| Inception-V4         | 63.47    | 81.63 | 51.83 | 70.39 | 85.13 | 60.11 |
+| SE-ResNeXt-101-32x4d | 65.85    | 83.03 | 53.32 | 72.89 | 86.80 | 62.80 |
+| ---------------- | ----     | ---- | ----  | ---- | ----  | ----  |
+| Dataset | DF24M    | DF24M             | DF24M | DF24 | DF24  | DF24  | 
 
-|  | Top1 [%] | Top3 [%] | F1 | Top1 [%] | Top3 [%] | F1 |
-| ---------------- | ---- | ---- | ---- | ---- | ---- | ---- |
-| EfficientNet-B0     | 65.66 | 83.35 | 0.531 | 70.33 | 85.19 | 0.613
-| EfficientNet-B3     | 67.39 | 83.74 | 0.550 | 72.51 | 86.77 | 0.634
-| SE-ResNeXt-101      | 68.87 | 85.14 | 0.585 | 74.26 | 87.78 | 0.660
-| ViT-Base/16         | 70.11 | 86.81 | 0.600 | 73.51 | 87.55 | 0.655
-| ViT-Large/16        | 71.04 | 86.15 | 0.603 | 75.29 | 88.34 | 0.675
-| ---------------- | ---- | ---- | ---- | ---- | ---- | ---- |
-| Dataset | DF20M | DF20M | DF20M | DF20 | DF20 | DF20 | 
 
-|  | Top1 [%] | Top3 [%] | F1 | Top1 [%] | Top3 [%] | F1 |
-| ---------------- | ---- | ---- | ---- | ---- | ---- | ---- |
-| EfficientNet-B0  | 69.62 | 85.96 | 0.582 | 75.35 | 88.67 | 0.670
-| EfficientNet-B3  | 71.59 | 87.39 | 0.613 | 77.59 | 90.07 | 0.699
-| SE-ResNeXt-101   | 74.23 | 88.27 | 0.651 | 78.72 | 90.54 | 0.708
-| ViT-Base/16      | 74.23 | 89.12 | 0.639 | 79.48 | 90.95 | 0.727
-| ViT-Large/16     | 75.85 | 89.95 | 0.669 | 80.45 | 91.68 | 0.743
-| ---------------- | ---- | ---- | ---- | ---- | ---- | ---- |
-| Dataset | DF20M | DF20M | DF20M | DF20 | DF20 | DF20 | 
+### ViT x CNN Performance Evaluation [**Updated**]
+Classification results of selected CNN and ViT architectures on DF24 and DF24 - Mini dataset for two input resolutions 224×224, 384×384.
+**Updated results based on new dataset split.**
 
-### Metadata Usage Experiment
-Performance gains from Fungus observation metadata: H - Habitat, S - Substrate, M - Month, and their combinations, on DF20. 
+#### Input resolution: 224×224
+|  | Top1 [%] | Top3 [%] | F1 [%]   | Top1 [%] | Top3 [%] | F1 [%]   |
+| ---------------- |---------|----------|-------|----------|--------|-------|
+| EfficientNet-B0     | 58.58   | 77.01    | 46.00 | 64.57    | 81.20  | 53.74 |
+| EfficientNet-B3     | 59.31   | 78.79    | 47.83 | 67.13    | 82.74  | 56.61 |
+| SE-ResNeXt-101      | 62.42   | 80.71    | 50.01 | 69.83    | 84.76  | 59.69 |
+| ViT-Base/16         | 65.33   | 82.44    | 52.28 | 70.26    | 84.86  | 60.31 |
+| ViT-Large/16        | 67.52   | 84.46    | 55.90 | 73.65    | 87.30  | 64.30 |
+| ---------------- | ----    | ----     | ----  | ----     | ----   | ----  |
+| Dataset | DF24M   | DF24M    | DF24M | DF24     | DF24   | DF24  | 
 
-#### DF20 - ViT-Large/16 with image size 384𐄂384. 
-| H | M | S | Top1 [%] | Top3 [%] | F1 |
-| ---- | ---- | ---- | ---- | ---- | ---- |
-| 𐄂  | 𐄂  | 𐄂  |  80.45 | 91.68 | 0.743 |
-| ✔ | 𐄂  | 𐄂  | +1.50 | +1.00 | +0.027  | 
-| 𐄂  | ✔ | 𐄂  | +0.95 | +0.62 | +0.014 |
-| 𐄂  | 𐄂  | ✔ | +1.13 | +0.69 | +0.020 |
-| 𐄂  | ✔ | ✔ | +1.93 | +1.27 | +0.032 |
-| ✔ | 𐄂  | ✔ | +2.48 | +1.66 | +0.044 |
-| ✔ | ✔ | 𐄂  | +2.31 | +1.48 | +0.040 |
-| ✔ | ✔ | ✔ | +2.95 | +1.92 | +0.053 |
- #### DF20-Mini - ViT-Base/16 with image size 224𐄂224. 
-| H | M | S | Top1 | Top3 | F1 |
-| ---- | ---- | ---- | ---- | ---- | ---- |
-| 𐄂  | 𐄂  | 𐄂  | 73.51 | 87.55 | 0.655 |
-| ✔ | 𐄂  | 𐄂  | +1.94 | +1.50 | +0.040  |
-| 𐄂  | ✔ | 𐄂  | +1.23 | +0.95 | +0.020   |
-| 𐄂  | 𐄂  | ✔ | +1.39 | +1.17 | +0.025  |
-| 𐄂  | ✔ | ✔ | +2.47 | +1.98 | +0.042   |
-| ✔ | 𐄂  | ✔ | +3.23 | +2.47 | +0.062   |
-| ✔ | ✔ | 𐄂  | +3.11 | +2.30 | +0.057  | 
-| ✔ | ✔ | ✔ | +3.81 | +2.84 | +0.070 |
+#### Input resolution: 384×384
 
+|  | Top1 [%] | Top3 [%] | F1 [%]   | Top1 [%] | Top3 [%] | F1 [%]   |
+| ---------------- |----------|---------|-------|----------|----------|-------|
+| EfficientNet-B0  | 63.79    | 81.60   | 51.22 | 70.16    | 85.00    | 59.34 |
+| EfficientNet-B3  | 65.14    | 82.46   | 52.55 | 72.47    | 86.63    | 62.31 |
+| SE-ResNeXt-101   | 68.06    | 84.00   | 56.22 | 74.83    | 88.13    | 65.32 |
+| ViT-Base/16      | 69.33    | 85.22   | 57.94 | 76.08    | 88.91    | 66.76 |
+| ViT-Large/16     | 72.20    | 87.46   | 60.23 | 78.81    | 90.64    | 70.25 |
+| ---------------- | ----     | ----    | ----  | ----     | ----     | ----  |
+| Dataset | DF24M    | DF24M   | DF24M | DF24     | DF24     | DF24  |
+
+### Metadata-fusion experiment [**Updated**]
+Performance gains aquired by exploiting the observation metadata, i.e. Habitat (H), Substrate (S), and Month (M).
+Additionally, we provide performance gains based on the ObservationID grouping of calibrated predictions (average over class score).
+The method for late metadata-fusion is described in the paper (Section 5.2). 
+
+
+#### DF24 - ViT-Large/16 with image size 384×384. [**Updated**]
+
+| H | M | S   | Top1 [%] | Top3 [%] | F1 [%]  |
+| ---- | ---- |-----|----------|----------|---------|
+| 𐄂 | 𐄂 | 𐄂 | _78.89_  | _90.71_  | _70.38_ |
+| ✔ | 𐄂 | 𐄂 | +1.55    | +1.10    | +3.22   |
+| 𐄂 | ✔ | 𐄂 | +0.71    | +0.62    | +1.17   |
+| 𐄂 | 𐄂 | ✔ | +0.90    | +0.76    | +1.86   |
+| 𐄂 | ✔ | ✔ | +1.53    | +1.22    | +2.87   |
+| ✔ | 𐄂 | ✔ | +2.12    | +1.57    | +4.53   |
+| ✔ | ✔ | 𐄂 | +2.01    | +1.54    | +3.98   |
+| ✔ | ✔ | ✔ | +2.53    | +1.95    | +5.13   |
+
+#### DF24 - ViT-Large/16 - 384×384 - With ObservationID grouping and calibration.
+
+| H | M | S   | Top1 [%] | Top3 [%] | F1 [%]  |
+| ---- | ---- |-----|----------|----------|---------|
+| 𐄂 | 𐄂 | 𐄂 | _85.89_  | _95.47_  | _77.87_ |
+| ✔ | 𐄂 | 𐄂 | +1.17    | +0.73    | +3.04   |
+| 𐄂 | ✔ | 𐄂 | +0.65    | +0.33    | +1.63   |
+| 𐄂 | 𐄂 | ✔ | +0.46    | +0.45    | +0.96   |
+| 𐄂 | ✔ | ✔ | +1.07    | +0.71    | +2.36   |
+| ✔ | 𐄂 | ✔ | +1.64    | +1.03    | +3.81   |
+| ✔ | ✔ | 𐄂 | +1.80    | +1.05    | +4.28   |
+| ✔ | ✔ | ✔ | +2.07    | +1.22    | +4.81   |
+
+
+ #### DF24  ViT-Base/16 with image size 224×224.
+| H | M | S | Top1    | Top3    | F1      |
+| ---- | ---- | ---- |---------|---------|---------|
+| 𐄂 | 𐄂 | 𐄂 | _70.33_ | _84.88_ | _60.44_ |
+| ✔ | 𐄂 | 𐄂 | +1.95   | +1.75   | +3.60   |
+| 𐄂 | ✔ | 𐄂 | +1.26   | +1.06   | +1.88   |
+| 𐄂 | 𐄂 | ✔ | +1.41   | +1.19   | +2.29   |
+| 𐄂 | ✔ | ✔ | +2.28   | +1.96   | +3.78   |
+| ✔ | 𐄂 | ✔ | +2.85   | +2.61   | +5.28   |
+| ✔ | ✔ | 𐄂 | +2.81   | +2.52   | +4.95   |
+| ✔ | ✔ | ✔ | +3.56   | +3.22   | +6.39   |
+
+
+ #### DF24 - ViT-Base/16 - 224×224 - With ObservationID grouping and calibration. 
+
+| H | M | S | Top1    | Top3    | F1      |
+| ---- | ---- | ---- |---------|---------|---------|
+| 𐄂 | 𐄂 | 𐄂 | _79.49_ | _92.10_ | _69.18_ |
+| ✔ | 𐄂 | 𐄂 | +1.88   | +1.08   | +3.96   |
+| 𐄂 | ✔ | 𐄂 | +1.07   | +0.77   | +1.92   |
+| 𐄂 | 𐄂 | ✔ | +1.15   | +0.75   | +2.03   |
+| 𐄂 | ✔ | ✔ | +2.04   | +1.30   | +3.48   |
+| ✔ | 𐄂 | ✔ | +2.61   | +1.61   | +5.23   |
+| ✔ | ✔ | 𐄂 | +2.75   | +1.59   | +5.27   |
+| ✔ | ✔ | ✔ | +3.31   | +2.07   | +6.36   |
 
 
 ## License
@@ -123,19 +211,29 @@ In other words, the training data, metadata, and models are available only for n
 
 ## Citation
 
-If you use *Danish Fungi* for your research or aplication, please consider citation:
+If you use *Danish Fungi* for your research or application, please consider citation:
 
 ```
-@article{picek2021danish,
-title={Danish Fungi 2020 - Not Just Another Image Recognition Dataset},
-author={Lukáš Picek and Milan Šulc and Jiří Matas and Jacob Heilmann-Clausen and Thomas S. Jeppesen and Thomas Læssøe and Tobias Frøslev},
-year={2021},
-eprint={2103.10107},
-archivePrefix={arXiv},
-primaryClass={cs.CV}
+@inproceedings{picek2022danish,
+  title={Danish fungi 2020-not just another image recognition dataset},
+  author={Picek, Luk{\'a}{\v{s}} and {\v{S}}ulc, Milan and Matas, Ji{\v{r}}{\'\i} and Jeppesen, Thomas S and Heilmann-Clausen, Jacob and L{\ae}ss{\o}e, Thomas and Fr{\o}slev, Tobias},
+  booktitle={Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision},
+  pages={1525--1535},
+  year={2022}
 }
 ```
-
+```
+@article{picek2022automatic,
+  title={Automatic fungi recognition: deep learning meets mycology},
+  author={Picek, Luk{\'a}{\v{s}} and {\v{S}}ulc, Milan and Matas, Ji{\v{r}}{\'\i} and Heilmann-Clausen, Jacob and Jeppesen, Thomas S and Lind, Emil},
+  journal={Sensors},
+  volume={22},
+  number={2},
+  pages={633},
+  year={2022},
+  publisher={Mdpi}
+}
+```
 ## Contact
 
 ```

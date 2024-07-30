@@ -1,0 +1,36 @@
+name: DanishFungi2024 Mini -- 224x224
+project: ${envvar:WANDB_PROJECT}
+entity: ${envvar:WANDB_ENTITY}
+description: Architecture sweep with an image size of 224x224 on DF24M.
+program: train.py
+
+method: grid
+parameters:
+  architecture:
+    values: [
+      'tf_efficientnet_b0.ap_in1k',
+      'tf_efficientnet_b3.ap_in1k',
+      'legacy_seresnext101_32x4d.in1k',
+      'vit_base_patch16_224',
+      'vit_large_patch16_224'
+    ]
+
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - "--train-path"
+  - ${envvar:TRAIN_METADATA_PATH}
+  - "--test-path"
+  - ${envvar:TEST_METADATA_PATH}
+  - "--config-path"
+  - "../configs/DF24M_224_config.yaml"
+  - "--cuda-devices"
+  - ${envvar:CUDA_VISIBLE_DEVICES}
+  - "--wandb-entity"
+  - ${envvar:WANDB_ENTITY}
+  - "--wandb-project"
+  - ${envvar:WANDB_PROJECT}
+  - "--hfhub-owner"
+  - ${envvar:HFHUB_OWNER}
+  - ${args}
