@@ -239,6 +239,7 @@ def get_default_model_card(config: dict, repo_name: str) -> str:
 
     model_mean = config.get("mean", "???")
     model_std = config.get("std", "???")
+    num_params = config.get("params", "???")
 
     model_card = f"""
 ---
@@ -255,7 +256,7 @@ license: cc-by-nc-4.0
 ## Model Details
 - **Model Type:** Danish Fungi Classification 
 - **Model Stats:**
-  - Params (M): ??
+  - Params (M): {num_params}
   - Image size: {image_size} x {image_size}
 - **Papers:**
 - **Original:** ??

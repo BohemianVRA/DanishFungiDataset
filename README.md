@@ -50,6 +50,7 @@ In order to support research in fine-grained plant classification and to allow f
 
 
 ## Installation
+Python 3.10+ is required.
 ### Local instalation
 1. Install dependencies
 ```
@@ -68,10 +69,9 @@ huggingface_hub.login()
 
 ## Training
 For training navigate to `./training` folder.
-To run the training you can use the provided `train.ipynb` notebook or CLI.
+To run the training you can use the provided `train.ipynb` notebook or `train.py` CLI.
 In both you have to:
-1. Specify valid _metadata.csv paths_ in **danish_fungi_train.py** in _load_metadata_ function.
-2. Specify valid paths, wandb settings, etc. in **train.ipynb** and run.
+* Specify valid paths, wandb settings, etc. in **train.ipynb** and run.
 
 ## Exploiting metadata with late-fusion
 To allow further processing model predictions with available metadata we provide a notebook  `./inference/metadata_fusion.ipynb`

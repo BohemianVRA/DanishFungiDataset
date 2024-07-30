@@ -1,22 +1,36 @@
 name: DanishFungi2024 Mini -- 384x384
-project: DanishFungi2024
-entity: zcu_cv
+project: ${envvar:WANDB_PROJECT}
+entity: ${envvar:WANDB_ENTITY}
 description: Architecture sweep with an image size of 384x384 on DF24M.
-program: danish_fungi_train.py
+program: train.py
+
 method: grid
 parameters:
-    architecture:
-        values: ['tf_efficientnet_b0.ap_in1k',  "tf_efficientnet_b3.ap_in1k",
-                 'legacy_seresnext101_32x4d.in1k', 'vit_base_patch16_384', 'vit_large_patch16_384']
+  architecture:
+    values: [
+      'tf_efficientnet_b0.ap_in1k',
+      'tf_efficientnet_b3.ap_in1k',
+      'legacy_seresnext101_32x4d.in1k',
+      'vit_base_patch16_384',
+      'vit_large_patch16_384'
+    ]
 
 command:
   - ${env}
   - ${interpreter}
   - ${program}
+  - "--train-path"
+  - ${envvar:TRAIN_METADATA_PATH}
+  - "--test-path"
+  - ${envvar:TEST_METADATA_PATH}
   - "--config-path"
-  - "../config/DF24M_384_config.yaml"
+  - "../configs/DF24M_384_config.yaml"
+  - "--cuda-devices"
+  - ${envvar:CUDA_VISIBLE_DEVICES}
   - "--wandb-entity"
-  - ${entity}
+  - ${envvar:WANDB_ENTITY}
   - "--wandb-project"
-  - ${project}
+  - ${envvar:WANDB_PROJECT}
+  - "--hfhub-owner"
+  - ${envvar:HFHUB_OWNER}
   - ${args}

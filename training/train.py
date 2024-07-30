@@ -1,3 +1,4 @@
+import argparse
 import logging
 import os
 
@@ -5,26 +6,96 @@ import numpy as np
 import pandas as pd
 import torch
 import torch.nn as nn
-import wandb
 from fgvc.core.training import predict, train
 from fgvc.datasets import get_dataloaders
 from fgvc.losses import FocalLossWithLogits, SeesawLossWithLogits
-from fgvc.utils.experiment import (get_optimizer_and_scheduler, load_args,
-                                   load_config, load_model,
-                                   load_train_metadata, save_config)
+from fgvc.utils.experiment import (get_optimizer_and_scheduler, load_config,
+                                   load_model, load_train_metadata,
+                                   parse_unknown_args, save_config)
 from fgvc.utils.utils import set_cuda_device, set_random_seed
 from fgvc.utils.wandb import (finish_wandb, init_wandb, resume_wandb,
                               set_best_scores_in_summary)
 from PIL import Image, ImageFile
 from scipy.special import softmax
 from torch.utils.data import DataLoader
+
+import wandb
 from utils.hfhub import export_model_to_huggingface_hub_from_checkpoint
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 logger = logging.getLogger("script")
 
-SCRATCH_DIR = os.getenv("SCRATCHDIR", "./")
+
+def load_args(
+    args: list = None,
+) -> tuple[argparse.Namespace, dict]:
+    """Load train script arguments using `argparse` library.
+
+    Parameters
+    ----------
+    args
+        Optional list of arguments that will be passed to method `parser.parse_known_args(args)`.
+
+    Returns
+    -------
+    args
+        Namespace with parsed known args.
+    extra_args
+        Dictionary with parsed unknown args.
+    """
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--train-path",
+        help="Path to a training metadata file.",
+        type=str,
+        required=True,
+    )
+    parser.add_argument(
+        "--test-path",
+        help="Path to a test metadata file.",
+        type=str,
+        required=True,
+    )
+    parser.add_argument(
+        "--config-path",
+        help="Path to a training config yaml file.",
+        type=str,
+        required=True,
+    )
+    parser.add_argument(
+        "--cuda-devices",
+        help="Visible cuda devices (cpu,0,1,2,...).",
+        type=str,
+        default=None,
+    )
+    parser.add_argument(
+        "--wandb-entity",
+        help="Entity name for logging experiment to W&B.",
+        type=str,
+        required=False,
+    )
+    parser.add_argument(
+        "--wandb-project",
+        help="Project name for logging experiment to W&B.",
+        type=str,
+        required=False,
+    )
+    parser.add_argument(
+        "--resume-exp-name",
+        help="Experiment name (exp_name) to resume training from the last training checkpoint.",
+        type=str,
+        default=None,
+    )
+    parser.add_argument(
+        "--hfhub-owner",
+        help="A user name or a project name to upload the newly trained model.",
+        type=str,
+        default=None,
+    )
+    args, unknown_args = parser.parse_known_args(args)
+    extra_args = parse_unknown_args(unknown_args)
+    return args, extra_args
 
 
 def evaluate(
@@ -120,17 +191,20 @@ def train_clf(
     wandb_entity: str = None,
     wandb_project: str = None,
     resume_exp_name: str = None,
+    hfhub_owner: str = None,
     **kwargs,
 ):
     """Train model on the classification task."""
     if train_metadata is None or valid_metadata is None or config_path is None:
         # load script args
         args, extra_args = load_args()
+        train_metadata = args.train_path
+        valid_metadata = args.test_path
         config_path = args.config_path
         cuda_devices = args.cuda_devices
         wandb_entity = args.wandb_entity
         wandb_project = args.wandb_project
-        save_to_hfhub = args.save_to_hfhub
+        hfhub_owner = args.hfhub_owner
     else:
         extra_args = kwargs
 
@@ -151,7 +225,7 @@ def train_clf(
 
     # load metadata
     logger.info("Loading training and validation metadata.")
-    train_df, valid_df, test_df = load_train_metadata(config)
+    train_df, valid_df = load_train_metadata(train_metadata, valid_metadata)
     config = add_metadata_info_to_config(config, train_df, valid_df)
 
     # load model and create optimizer and lr scheduler
@@ -237,6 +311,7 @@ def train_clf(
     model_filename = os.path.join(config["exp_path"] + "/best_f1.pth")
     model.load_state_dict(torch.load(model_filename, map_location="cpu"))
 
+    test_df = valid_df
     _, test_loader, _, _ = get_dataloaders(
         None,
         test_df,
@@ -263,14 +338,14 @@ def train_clf(
     def count_parameters(trained_model):
         return sum(p.numel() for p in trained_model.parameters() if p.requires_grad)
 
-    if save_to_hfhub:
+    if hfhub_owner is not None:
         try:
             num_params = count_parameters(model)
             config["mean"] = model_mean
             config["std"] = model_std
             config["params"] = np.round(num_params / 1000000, 1)
             export_model_to_huggingface_hub_from_checkpoint(
-                config=config, repo_owner=args.hfhub_owner, saved_model="f1"
+                config=config, repo_owner=hfhub_owner, saved_model="f1"
             )
         except Exception as e:
             print(f"Exception during export: {e}")
