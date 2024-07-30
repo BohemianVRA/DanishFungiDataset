@@ -1,6 +1,6 @@
 [![PWC](https://img.shields.io/badge/WACV-2022-blue)](https://wacv2022.thecvf.com/)
 [![PWC](https://img.shields.io/badge/Proceedings-CVF-red)](https://openaccess.thecvf.com/content/WACV2022/html/Picek_Danish_Fungi_2020_-_Not_Just_Another_Image_Recognition_Dataset_WACV_2022_paper.html)
-[![PWC](https://img.shields.io/badge/Pretrained--Models-HuggingFace-blue)](https://huggingface.co/BVRA)
+[![PWC](https://img.shields.io/badge/Pretrained--Models-HuggingFace-blue)](https://huggingface.co/collections/BVRA/danish-fungi-2020-66a2228d0f4902df59d549e8)
 
 
 # 🍄 Danish Fungi – Not Just Another Image Recognition Dataset
@@ -10,7 +10,7 @@ By [Lukas Picek](https://sites.google.com/view/picekl) et al.
 
 ## Description
 
-Danish Fungi 2020 (DF20) is a new dataset for fine-grained visual categorization. The datasets is 
+Danish Fungi 2020 (DF20) is a new dataset for fine-grained visual categorization. The dataset is 
 constructed from observations submitted to the Atlas of Danish Fungi and is unique in
 (i) its taxonomy-accurate labels with little to no label errors,
 (ii) highly unbalanced long-tailed class distribution,
@@ -24,10 +24,10 @@ settings on the classification performance.
 ![Species Similarities and differences](figures/fungi_samples.png)
 
 ## News
-- We made a new train/test split based on ObservationIDs where data from the same observation do not occur in the test set. 
-- To distinguish it from the original split we call it **DanishFungi24**.
-- Updated baseline performance. All models are retrained and the results bellow updated (there is just a small drop in performance).
-- Model checkpoints are newly available at [Hugging Face Hub Repository](https://huggingface.co/BVRA).
+- **30.7. 20024**: We made a new train/test split based on ObservationIDs where data from the same observation do not occur in the test set. 
+- **30.7. 20024**: To distinguish it from the original split we call it **DanishFungi24**.
+- **30.7. 20024**: Updated baseline performance. All models are retrained and the results bellow updated (there is just a small drop in performance).
+- **30.7. 20024**: Model checkpoints are newly available at [Hugging Face Hub Repository](https://huggingface.co/collections/BVRA/danish-fungi-2020-66a2228d0f4902df59d549e8).
 
 ## Data
 | Subset                   | Images (full-size)                                                                        | Images <br/>(max side size 300px)                                                       | Metadata                                                           |
@@ -44,8 +44,8 @@ wget --no-check-certificate URL
 ```
 
 In order to support research in fine-grained plant classification and to allow full reproducibility of our results, we share the training scripts and data tools.
-- Checkpoints are available at [Hugging Face Hub Repository](https://huggingface.co/BVRA).
-- Train and Validation logs are available at [Weights & Biases Workspace](https://wandb.ai/zcu_cv/DanishFungi2023).
+- Checkpoints are available at [Hugging Face Hub Repository](https://huggingface.co/collections/BVRA/danish-fungi-2020-66a2228d0f4902df59d549e8).
+- Train and Validation logs are available at [Weights & Biases Workspace](https://wandb.ai/zcu_cv/DanishFungi2024).
 
 
 
@@ -53,34 +53,50 @@ In order to support research in fine-grained plant classification and to allow f
 Python 3.10+ is required.
 ### Local instalation
 1. Install dependencies
+You can use any virtual or local environment. Just use the following commands in your terminal.
 ```
 pip install -r requirements.txt
 ```
 2. Login to [Weights & Biases](https://wandb.ai/site) to log results [*optional].
 ```
-import wandb
-wandb.login()
+wandb login
 ```
 3. Login to [Hugging Face Hub](https://huggingface.co/) to save and download model checkpoints [*optional].
 ```
-import huggingface_hub
-huggingface_hub.login()
+huggingface-cli login
 ```
 
 ## Training
 For training navigate to `./training` folder.
 To run the training you can use the provided `train.ipynb` notebook or `train.py` CLI.
 In both you have to:
-* Specify valid paths, wandb settings, etc. in **train.ipynb** and run.
+* Specify valid paths, wandb settings, etc. in **train.ipynb** or local environment and run. In the notebook
+all variables that must be "set" have `"changethis"` as value.
+
+```
+python train.py \
+    --train-path $TRAIN_METADATA_PATH \
+    --test-path $TEST_METADATA_PATH \
+    --config-path ../configs/DF24M_224_config.yaml \
+    --cuda-devices $CUDA_DEVICES \
+    --wandb-entity $WANDB_ENTITY [**optional**] \
+    --wandb-project $WANDB_PROJECT [**optional**] \
+    --hfhub-owner $HFHUB_OWNER [**optional**]
+```
+
+
+os.environ["CUDA_VISIBLE_DEVICES"] = os.environ["CUDA_DEVICES"]
+
 
 ## Exploiting metadata with late-fusion
-To allow further processing model predictions with available metadata we provide a notebook  `./inference/metadata_fusion.ipynb`
+To allow easy use of the available observation metadata (i.e., information about habitat, substrate etc.)
+we provide a notebook `./inference/metadata_fusion.ipynb` that uses the late metadata-fusion (described in the paper Section 5.2).
 
 ## Results
 
 ### CNN Performance Evaluation [**Updated**]
 Classification performance of selected CNN architectures on DF24 and DF24 - Mini.
-All networks share the settings described in Section 6.1 and were trained on 299×299 images.
+All networks share the settings described in the paper (Section 5.1) and were trained on 299×299 images.
 
 
 |  | Top1 [%] | Top3 [%]          | F1 [%]   | Top1 [%] | Top3 [%] | F1 [%]   |
@@ -131,6 +147,8 @@ Classification results of selected CNN and ViT architectures on DF24 and DF24 - 
 ### Metadata-fusion experiment [**Updated**]
 Performance gains aquired by exploiting the observation metadata, i.e. Habitat (H), Substrate (S), and Month (M).
 Additionally, we provide performance gains based on the ObservationID grouping of calibrated predictions (average over class score).
+The method for late metadata-fusion is described in the paper (Section 5.2). 
+
 
 #### DF24 - ViT-Large/16 with image size 384×384. [**Updated**]
 
