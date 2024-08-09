@@ -24,10 +24,10 @@ settings on the classification performance.
 ![Species Similarities and differences](figures/fungi_samples.png)
 
 ## News
-- **30.7. 20024**: We made a new train/test split based on ObservationIDs where data from the same observation do not occur in the test set. 
-- **30.7. 20024**: To distinguish it from the original split we call it **DanishFungi24**.
-- **30.7. 20024**: Updated baseline performance. All models are retrained and the results bellow updated (there is just a small drop in performance).
-- **30.7. 20024**: Model checkpoints are newly available at [Hugging Face Hub Repository](https://huggingface.co/collections/BVRA/danish-fungi-2020-66a2228d0f4902df59d549e8).
+- **30.7. 2024**: We made a new train/test split based on ObservationIDs where data from the same observation do not occur in the test set. 
+- **30.7. 2024**: To distinguish it from the original split we call it **DanishFungi24**.
+- **30.7. 2024**: Updated baseline performance. All models are retrained and the results bellow updated (there is just a small drop in performance).
+- **30.7. 2024**: Model checkpoints are newly available at [Hugging Face Hub Repository](https://huggingface.co/collections/BVRA/danish-fungi-2020-66a2228d0f4902df59d549e8).
 
 ## Data
 | Subset                   | Images (full-size)                                                                        | Images <br/>(max side size 300px)                                                       | Metadata                                                           |
